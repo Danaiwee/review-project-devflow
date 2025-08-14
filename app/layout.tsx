@@ -1,59 +1,54 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";  
+import type { Metadata } from "next";
+import localFont from "next/font/local";
 
-import { FlatCompat } from "@eslint/eslintrc";
+import "./globals.css";
+import { ThemeProvider } from "@/context/Theme";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
+const inter = localFont({
+  src: "./fonts/InterVF.ttf",
+  variable: "--font-inter",
+  weight: "100 200 300 400 500 600 700 800 900",
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
-  {
-    rules: {
-      "import/order": [
-        "error",
-        {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            ["parent", "sibling"],
-            "index",
-            "object",
-          ],
+const spaceGrotesk = localFont({
+  src: "./fonts/GroteskVF.ttf",
+  variable: "--font-space-grotesk",
+  weight: "100 200 300 400 500 600 700 800 900",
+});
 
-          "newlines-between": "always",
+export const metadata: Metadata = {
+  title: "DevFlow",
+  description:
+    "DevFlow — a collaborative platform where developers ask questions, share solutions, and grow their coding skills.",
+  icons: "/images/site-logo.svg",
+};
 
-          pathGroups: [
-            {
-              pattern: "@app/**",
-              group: "external",
-              position: "after",
-            },
-          ],
-
-          pathGroupsExcludedImportTypes: ["builtin"],
-
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-        },
-      ],
-      "comma-dangle": "off",
-    },
-  },
-  {
-    files: ["**/*.ts", "**/*.tsx"],
-
-    rules: {
-      "no-undef": "off",
-    },
-  },
-];
-
-export default eslintConfig;
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          type="text/css"
+          href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+        />
+      </head>
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
