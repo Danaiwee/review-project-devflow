@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
@@ -13,6 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ANSWERS, QUESTIONS, TAGS, USERS } from "@/constants";
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/empty";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Profile",
+  description:
+    "View and manage your personal developer profile, including your questions, answers, collections, reputation, and activity within the community.",
+};
 
 const ProfilePage = () => {
   const user = USERS[3];

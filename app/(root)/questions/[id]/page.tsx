@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import React, { Suspense } from "react";
 
@@ -13,6 +14,12 @@ import UserAvatar from "@/components/navigation/UserAvatar";
 import { ANSWERS, QUESTIONS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Question Details",
+  description:
+    "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
+};
 
 const QuestionPage = () => {
   const question = QUESTIONS[0];

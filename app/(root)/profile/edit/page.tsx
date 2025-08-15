@@ -1,7 +1,14 @@
+import { Metadata } from "next";
 import React from "react";
 
 import ProfileForm from "@/components/forms/ProfileForm";
 import { USERS } from "@/constants";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Edit Profile",
+  description:
+    "Update and customize your developer profile, including your name, username, location, portfolio, and bio details.",
+};
 
 const EditProfilePage = () => {
   const user = USERS[3];

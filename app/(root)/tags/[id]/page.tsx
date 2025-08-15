@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
@@ -6,6 +7,12 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { QUESTIONS, TAGS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Tag",
+  description:
+    "Explore all questions, answers, and discussions related to the tag, and stay updated on trends and best practices.",
+};
 
 const TagPage = () => {
   const tag = TAGS[0];

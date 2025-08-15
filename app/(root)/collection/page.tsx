@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
@@ -7,6 +8,12 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { COLLECTION_FILTERS, QUESTIONS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Collection",
+  description:
+    "View and manage all the questions you’ve saved, organized for easy access and quick reference.",
+};
 
 const CollectionPage = () => {
   const success = true;

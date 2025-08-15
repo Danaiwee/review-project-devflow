@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import TagCard from "@/components/cards/TagCard";
@@ -7,6 +8,12 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { TAG_FILTERS, TAGS } from "@/constants";
 import { EMPTY_TAGS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Tags",
+  description:
+    "Browse and explore tags to find questions, answers, and discussions related to your favorite programming languages, tools, and technologies.",
+};
 
 const TagsPage = () => {
   const success = true;

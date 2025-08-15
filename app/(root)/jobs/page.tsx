@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import JobCard from "@/components/cards/JobCard";
@@ -7,6 +8,12 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { COUNTRIES, JOBS } from "@/constants";
 import { EMPTY_JOBS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Find Jobs",
+  description:
+    "Discover the latest developer job opportunities, filter by location and skills, and apply to positions that match your expertise.",
+};
 
 const JobsPage = () => {
   const success = true;

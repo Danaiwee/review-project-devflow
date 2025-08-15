@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import React from "react";
 
 import UserCard from "@/components/cards/UserCard";
@@ -7,6 +8,12 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { USER_FILTERS, USERS } from "@/constants";
 import { EMPTY_USERS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Community",
+  description:
+    "Connect with developers worldwide, explore community members’ profiles, and engage with like-minded tech enthusiasts.",
+};
 
 const CommunityPage = () => {
   const success = true;

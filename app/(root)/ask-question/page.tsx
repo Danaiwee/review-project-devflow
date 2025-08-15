@@ -1,6 +1,13 @@
+import { Metadata } from "next";
 import React from "react";
 
 import QuestionForm from "@/components/forms/QuestionForm";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Ask Question",
+  description:
+    "Create and submit your programming questions, add relevant tags, and share your query with the developer community for answers.",
+};
 
 const AskQuestionPage = () => {
   return (
