@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
@@ -10,6 +11,12 @@ import { Button } from "@/components/ui/button";
 import { HOMEPAGE_FILTERS, QUESTIONS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+
+export const metadata: Metadata = {
+  title: "DevFlow | Home",
+  description:
+    "DevFlow is a community-driven Q&A platform for developers to ask questions, share knowledge, and connect with other tech enthusiasts. Discover trending topics, explore tags, and find the best solutions for your coding challenges",
+};
 
 const HomePage = () => {
   const success = true;
@@ -58,7 +65,7 @@ const HomePage = () => {
         render={(QUESTIONS) => (
           <div className="mt-10 flex w-full flex-col gap-6">
             {QUESTIONS.map((question) => (
-              <QuestionCard key={question._id} question={question} />
+              <QuestionCard key={question._id} question={question} showActionBtns />
             ))}
           </div>
         )}

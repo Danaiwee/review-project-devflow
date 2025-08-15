@@ -4,6 +4,7 @@ import React from "react";
 import { ROUTES } from "@/constants/routes";
 import { getTimeStamp } from "@/lib/utils";
 
+import EditDeleteAction from "./EditDeleteAction";
 import Metric from "./Metric";
 import TagCard from "./TagCard";
 
@@ -34,7 +35,7 @@ const QuestionCard = ({
           </Link>
         </div>
 
-        {showActionBtns && "Edit delete action"}
+        {showActionBtns && <EditDeleteAction type="Question" itemId={_id} />}
       </div>
 
       <div className="mt-3.5 flex w-full flex-wrap gap-2">

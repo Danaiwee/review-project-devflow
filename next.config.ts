@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
         hostname: "randomuser.me",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
+        port: "",
+      },
+      {
+        protocol: "https",
+        hostname: "flagsapi.com",
+        port: "",
+      },
     ],
   },
 };

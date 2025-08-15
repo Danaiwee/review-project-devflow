@@ -47,3 +47,39 @@ export const SignUpSchema = z.object({
       message: "Password must contain at least one special character.",
     }),
 });
+
+export const ProfileSchema = z.object({
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  username: z
+    .string()
+    .min(3, { message: "Username must be at least 3 characters" })
+    .max(100, { message: "Username cannot exceed 100 characters" }),
+  portfolio: z.string().url({ message: "Please provide a valid URL" }),
+  location: z.string().min(3, { message: "Please provide proper location" }),
+  bio: z.string().min(3, { message: "bio must must be at least 3 characters" }),
+});
+
+export const AskQuestionSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: "Title is required" })
+    .max(150, { message: "Title cannot exceed 150 characters" }),
+  content: z
+    .string()
+    .min(100, { message: "Content must contain al least 100 characters" }),
+  tags: z
+    .array(
+      z
+        .string()
+        .min(1, { message: "Tag is required" })
+        .max(20, { message: "Tag cannot exceed 20 characters" })
+    )
+    .min(1, { message: "You have to add at least 1 tag" })
+    .max(3, { message: "Maximun 3 tags" }),
+});
+
+export const AnswerSchema = z.object({
+  content: z
+    .string()
+    .min(100, { message: "You have to provide mininum of 100 characters" }),
+});
