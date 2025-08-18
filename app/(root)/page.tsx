@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
+import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
 import CommonFilter from "@/components/search/CommonFilter";
@@ -18,12 +19,15 @@ export const metadata: Metadata = {
     "DevFlow is a community-driven Q&A platform for developers to ask questions, share knowledge, and connect with other tech enthusiasts. Discover trending topics, explore tags, and find the best solutions for your coding challenges",
 };
 
-const HomePage = () => {
+const HomePage = async () => {
   const success = true;
   const error = {
     message: null,
     details: null,
   };
+
+  const session = await auth();
+  console.log(session);
 
   return (
     <>
@@ -65,7 +69,11 @@ const HomePage = () => {
         render={(QUESTIONS) => (
           <div className="mt-10 flex w-full flex-col gap-6">
             {QUESTIONS.map((question) => (
-              <QuestionCard key={question._id} question={question} showActionBtns />
+              <QuestionCard
+                key={question._id}
+                question={question}
+                showActionBtns
+              />
             ))}
           </div>
         )}

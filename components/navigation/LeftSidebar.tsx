@@ -2,6 +2,7 @@ import { LogOut, Link } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
+import { signOut } from "@/auth";
 import { ROUTES } from "@/constants/routes";
 
 import NavLinks from "./NavLinks";
@@ -18,7 +19,13 @@ const LeftSidebar = () => {
 
       <div className="flex flex-col gap-3">
         {userId ? (
-          <form>
+          <form
+            action={async () => {
+              "use server";
+
+              await signOut();
+            }}
+          >
             <Button
               type="submit"
               className="base-medium w-fit !bg-transparent px-4 py-3"

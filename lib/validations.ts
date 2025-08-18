@@ -83,3 +83,48 @@ export const AnswerSchema = z.object({
     .string()
     .min(100, { message: "You have to provide mininum of 100 characters" }),
 });
+
+export const UserSchema = z.object({
+  name: z.string().min(1, "Name is required."),
+  username: z.string().min(3, "Username must be at least 6 characters "),
+  email: z.email("Invalid email address"),
+  bio: z.string().optional(),
+  image: z.string().optional(),
+  location: z.string().optional(),
+  prortfolio: z.url("Invalid portfolio URL").optional(),
+  reputation: z.number().optional(),
+});
+
+export const AccountSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  name: z.string().min(1, "Name is required"),
+  image: z.string().optional(),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long." })
+    .max(100, { message: "Password cannot exceed 100 characters." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .regex(/[0-9]/, { message: "Password must contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: "Password must contain at least one special character.",
+    })
+    .optional(),
+  provider: z.string().min(1, "Provider is required"),
+  providerAccountId: z.string().min(1, "Provider account ID is required"),
+});
+
+export const SignInWithOAuthSchema = z.object({
+  provider: z.enum(["google", "github"]),
+  providerAccountId: z.string().min(1, "Provider account ID is required"),
+  user: z.object({
+    name: z.string().min(1, "Name is required"),
+    username: z.string().min(1, "Username is required"),
+    email: z.email("Invalid email address"),
+    image: z.string().optional(),
+  }),
+});

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { signOut } from "@/auth";
 import { ROUTES } from "@/constants/routes";
 
 import NavLinks from "./NavLinks";
@@ -58,7 +59,13 @@ const MobileNavigation = () => {
           <div className="flex flex-col gap-3">
             {userId ? (
               <SheetClose asChild>
-                <form>
+                <form
+                  action={async () => {
+                    "use server";
+
+                    await signOut();
+                  }}
+                >
                   <Button
                     className="base-medium w-fit bg-transparent px-4 py-3"
                     variant="ghost"

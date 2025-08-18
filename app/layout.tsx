@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-
 import "./globals.css";
+import { Toaster } from "sonner";
+
 import { ThemeProvider } from "@/context/Theme";
 
 const inter = localFont({
@@ -48,6 +49,7 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
