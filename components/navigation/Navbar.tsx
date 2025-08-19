@@ -1,8 +1,6 @@
 import Image from "next/image";
-import image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { id } from "zod/v4/locales";
 
 import { auth } from "@/auth";
 

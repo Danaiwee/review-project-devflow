@@ -4,10 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
-import React, { useRef } from "react";
+import { useRouter } from "next/navigation";
+import React, { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
+import { ROUTES } from "@/constants/routes";
+import { createQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
 
 import TagCard from "../cards/TagCard";
@@ -31,8 +35,9 @@ interface QuestionFormProps {
 }
 
 const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
+  const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
-  const isPending = false;
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
@@ -84,7 +89,22 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
   };
 
   const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
-    console.log(data);
+    startTransition(async () => {
+      try {
+        const result = await createQuestion(data);
+
+        if (result.success) {
+          toast("Success", {
+            description: "Create question successfully",
+          });
+
+          router.push(ROUTES.QUESTION(result.data._id));
+        }
+      } catch (error) {
+        console.log(error);
+        toast("Error", { description: "Error in create question" });
+      }
+    });
   };
 
   return (
