@@ -36,9 +36,9 @@ const UserAvatar = ({
           <Image
             src={imageUrl}
             alt={name}
-            className="object-cover"
-            fill
-            quality={100}
+            className="object-contain"
+            width={35}
+            height={35}
           />
         ) : (
           <AvatarFallback

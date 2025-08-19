@@ -8,3 +8,15 @@ interface SignInWithOAuthParams {
     image?: string;
   };
 }
+
+interface signUpWithCredentialsParams {
+  username: string;
+  name: string;
+  email: string;
+  password: string;
+}
+
+interface SignInWithCredentailsParams {
+  email: string;
+  password: string;
+}

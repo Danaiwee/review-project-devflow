@@ -3,10 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Path, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 import { ROUTES } from "@/constants/routes";
+import { signInWithCredentials } from "@/lib/actions/auth.action";
 import { SignInSchema } from "@/lib/validations";
 
 import { Button } from "../ui/button";
@@ -25,13 +28,29 @@ interface SignInFormProps {
 }
 
 const SignInForm = ({ defaultValues }: SignInFormProps) => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof SignInSchema>>({
     resolver: zodResolver(SignInSchema),
     defaultValues: defaultValues,
   });
 
-  const handleFormSubmit = (data: z.infer<typeof SignInSchema>) => {
-    console.log(data);
+  const handleFormSubmit = async (data: z.infer<typeof SignInSchema>) => {
+    try {
+      const result = await signInWithCredentials(data);
+      if (result.success) {
+        toast("Success", {
+          description: "Sign in successfully",
+        });
+
+        router.push(ROUTES.HOME);
+      }
+    } catch (error) {
+      console.log(error);
+      toast("Error", {
+        description: "An error occurred during sign up",
+      });
+    }
   };
 
   return (

@@ -46,7 +46,7 @@ const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
               alt={item.label}
               width={20}
               height={20}
-              className={cn({ "invert-colors": !isActive })}
+              className={cn("w-5 h-5",{ "invert-colors": !isActive })}
             />
             <p
               className={cn(
