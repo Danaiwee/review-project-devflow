@@ -12,7 +12,7 @@ import { SheetClose } from "../ui/sheet";
 
 interface NavLinksProps {
   isMobileNav?: boolean;
-  userId: string;
+  userId?: string;
 }
 
 const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
@@ -46,7 +46,7 @@ const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
               alt={item.label}
               width={20}
               height={20}
-              className={cn("w-5 h-5",{ "invert-colors": !isActive })}
+              className={cn("w-5 h-5", { "invert-colors": !isActive })}
             />
             <p
               className={cn(

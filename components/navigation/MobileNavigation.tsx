@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { ROUTES } from "@/constants/routes";
 
 import NavLinks from "./NavLinks";
@@ -12,12 +12,14 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
 
-const MobileNavigation = () => {
-  const userId = "12345";
+const MobileNavigation = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
 
   return (
     <Sheet>
@@ -35,6 +37,7 @@ const MobileNavigation = () => {
         className="background-light900_dark200 border-none max-w-[300px]"
       >
         <SheetTitle className="hidden">Navigation</SheetTitle>
+        <SheetDescription className="hidden">Navigation link</SheetDescription>
         <Link href="/" className="flex items-center gap-1 p-3">
           <Image
             src="/images/site-logo.svg"

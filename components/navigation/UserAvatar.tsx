@@ -25,7 +25,7 @@ const UserAvatar = ({
   const initialName = name
     .split(" ")
     .map((word: string) => word[0])
-    .join()
+    .join("")
     .toUpperCase()
     .slice(0, 2);
 

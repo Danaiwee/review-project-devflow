@@ -1,15 +1,17 @@
-import { LogOut, Link } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
-import { signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 import { ROUTES } from "@/constants/routes";
 
 import NavLinks from "./NavLinks";
 import { Button } from "../ui/button";
 
-const LeftSidebar = () => {
-  const userId = "12345";
+const LeftSidebar = async () => {
+  const session = await auth();
+  const userId = session?.user?.id;
 
   return (
     <aside className="custom-scrollbar background-light900_dark200 light-border sticky left-0 top-0 flex h-screen flex-col justify-between overflow-y-auto border-r p-6 pt-36 shadow-light-300 dark:shadow-none max-sm:hidden lg:w-[266px]">
