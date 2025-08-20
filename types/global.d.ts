@@ -90,4 +90,10 @@ declare global {
 
   type APIErrorReponse = NextResponse<ErrorResponse>;
   type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
+
+  interface Collection {
+    _id: string;
+    author: string | Author;
+    question: Question;
+  }
 }

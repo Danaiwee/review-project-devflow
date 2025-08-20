@@ -29,26 +29,7 @@ const DataRenderer = <T,>({
   empty = DEFAULT_EMPTY,
   render,
 }: DataRendererProps<T>) => {
-  if (!success) {
-    return (
-      <StateSkeleton
-        image={{
-          light: "/images/light-error.png",
-          dark: "/images/dark-error.png",
-          alt: "Error state illustation",
-        }}
-        title={error?.message || DEFAULT_ERROR.title}
-        message={
-          error?.details
-            ? JSON.stringify(error.details, null, 2)
-            : DEFAULT_ERROR.message
-        }
-        button={empty.button}
-      />
-    );
-  }
-
-  if (!data || data.length === 0) {
+  if (!data || data.length === 0 || data === undefined) {
     return (
       <StateSkeleton
         image={{
@@ -58,6 +39,25 @@ const DataRenderer = <T,>({
         }}
         title={empty.title}
         message={empty.message}
+        button={empty.button}
+      />
+    );
+  }
+
+  if (!success) {
+    return (
+      <StateSkeleton
+        image={{
+          light: "/images/light-error.png",
+          dark: "/images/dark-error.png",
+          alt: "Error state illustation",
+        }}
+        title={DEFAULT_ERROR.title || error?.message || ""}
+        message={
+          error?.details
+            ? JSON.stringify(error.details, null, 2)
+            : DEFAULT_ERROR.message
+        }
         button={empty.button}
       />
     );

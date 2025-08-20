@@ -5,9 +5,10 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
 import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { COLLECTION_FILTERS, QUESTIONS } from "@/constants";
+import { COLLECTION_FILTERS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { getSavedQuestions } from "@/lib/actions/collection.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Collection",
@@ -15,12 +16,18 @@ export const metadata: Metadata = {
     "View and manage all the questions you’ve saved, organized for easy access and quick reference.",
 };
 
-const CollectionPage = () => {
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const CollectionPage = async ({ searchParams }: RouteParams) => {
+  const { page, pageSize, query, filter } = await searchParams;
+
+  const { success, data, error } = await getSavedQuestions({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query,
+    filter,
+  });
+  const { questions } = data || {};
+
+  console.log(questions);
 
   return (
     <>
@@ -43,12 +50,12 @@ const CollectionPage = () => {
       <DataRenderer
         success={success}
         error={error}
-        data={QUESTIONS}
+        data={questions}
         empty={EMPTY_QUESTION}
-        render={(QUESTIONS) => (
+        render={(questions) => (
           <div className="mt-10 flex w-full flex-col gap-6">
-            {QUESTIONS.map((question) => (
-              <QuestionCard key={question._id} question={question} />
+            {questions.map((item) => (
+              <QuestionCard key={item._id} question={item.question} />
             ))}
           </div>
         )}
