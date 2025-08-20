@@ -11,8 +11,9 @@ import Votes from "@/components/cards/Votes";
 import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import UserAvatar from "@/components/navigation/UserAvatar";
-import { ANSWERS, QUESTIONS } from "@/constants";
+import { ANSWERS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
+import { getQuestion } from "@/lib/actions/question.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -21,24 +22,24 @@ export const metadata: Metadata = {
     "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
 };
 
-const QuestionPage = () => {
-  const question = QUESTIONS[0];
+const QuestionPage = async ({ params }: RouteParams) => {
+  const { id } = await params;
+
+  const { data, error } = await getQuestion({ questionId: id });
+  const { question } = data!;
+
   const { _id, author, createdAt, answers, views, tags, content, title } =
     question;
 
-  const error = {
-    message: undefined,
-    details: undefined,
-  };
   return (
     <>
       <section className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between">
           <div className="flex items-center justify-start gap-1">
             <UserAvatar
-              id={author._id}
-              name={author.name}
-              imageUrl={author.image}
+              id={author?._id}
+              name={author?.name}
+              imageUrl={author?.image}
               className="size-[22px]"
               fallbackClassName="text-[10px]"
             />

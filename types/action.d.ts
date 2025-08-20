@@ -26,3 +26,24 @@ interface CreateQuestionParams {
   content: string;
   tags: string[];
 }
+
+interface PaginatedSearchParams {
+  page?: number;
+  pageSize?: number;
+  query?: string;
+  filter?: string;
+  sort?: string;
+}
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
+}
+
+interface GetQuestionParams {
+  questionId: string;
+}
+
+interface EditQuestionParams extends CreateQuestionParams {
+  questionId: string;
+}

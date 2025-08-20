@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import z from "zod";
 
 import { ROUTES } from "@/constants/routes";
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { AskQuestionSchema } from "@/lib/validations";
 
 import TagCard from "../cards/TagCard";
@@ -90,6 +90,28 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
 
   const handleCreateQuestion = (data: z.infer<typeof AskQuestionSchema>) => {
     startTransition(async () => {
+      if (isEdit && question) {
+        try {
+          const result = await editQuestion({
+            questionId: question._id,
+            ...data,
+          });
+
+          if (result.success) {
+            toast("Updated Successfully", {
+              description: "You question has been updated",
+            });
+
+            router.push(ROUTES.QUESTION(question._id));
+          }
+        } catch (error) {
+          console.log(error);
+          toast("Error", { description: "Error in update question" });
+        }
+
+        return;
+      }
+
       try {
         const result = await createQuestion(data);
 

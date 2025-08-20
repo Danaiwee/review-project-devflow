@@ -2,16 +2,16 @@ import { Metadata } from "next";
 import Link from "next/link";
 import React from "react";
 
-import { auth } from "@/auth";
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
 import CommonFilter from "@/components/search/CommonFilter";
 import HomeFilter from "@/components/search/HomeFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { Button } from "@/components/ui/button";
-import { HOMEPAGE_FILTERS, QUESTIONS } from "@/constants";
+import { HOMEPAGE_FILTERS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { getQuestions } from "@/lib/actions/question.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Home",
@@ -19,12 +19,16 @@ export const metadata: Metadata = {
     "DevFlow is a community-driven Q&A platform for developers to ask questions, share knowledge, and connect with other tech enthusiasts. Discover trending topics, explore tags, and find the best solutions for your coding challenges",
 };
 
-const HomePage = async () => {
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const HomePage = async ({ searchParams }: RouteParams) => {
+  const { page, pageSize, query, filter } = await searchParams;
+
+  const { success, data, error } = await getQuestions({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query,
+    filter,
+  });
+  const { questions } = data || {};
 
   return (
     <>
@@ -61,11 +65,11 @@ const HomePage = async () => {
       <DataRenderer
         success={success}
         error={error}
-        data={QUESTIONS}
+        data={questions}
         empty={EMPTY_QUESTION}
-        render={(QUESTIONS) => (
+        render={(questions) => (
           <div className="mt-10 flex w-full flex-col gap-6">
-            {QUESTIONS.map((question) => (
+            {questions.map((question) => (
               <QuestionCard
                 key={question._id}
                 question={question}
