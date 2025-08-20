@@ -3,11 +3,12 @@ import React from "react";
 
 import UserCard from "@/components/cards/UserCard";
 import DataRenderer from "@/components/data/DataRenderer";
-import CommonFilter from "@/components/search/CommonFilter";
+import CommonFilter from "@/components/search/CommonFilter";  
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { USER_FILTERS, USERS } from "@/constants";
+import { USER_FILTERS } from "@/constants";
 import { EMPTY_USERS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { getUsers } from "@/lib/actions/user.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Community",
@@ -15,12 +16,16 @@ export const metadata: Metadata = {
     "Connect with developers worldwide, explore community members’ profiles, and engage with like-minded tech enthusiasts.",
 };
 
-const CommunityPage = () => {
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const CommunityPage = async ({ searchParams }: RouteParams) => {
+  const { page, pageSize, query, filter } = await searchParams;
+
+  const { success, data, error } = await getUsers({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    query,
+    filter,
+  });
+  const { users } = data || {};
 
   return (
     <>
@@ -43,11 +48,11 @@ const CommunityPage = () => {
       <DataRenderer
         success={success}
         error={error}
-        data={USERS}
+        data={users}
         empty={EMPTY_USERS}
-        render={(USERS) => (
+        render={(users) => (
           <div className="mt-12 flex flex-wrap gap-5">
-            {USERS.map((user) => (
+            {users.map((user) => (
               <UserCard key={user._id} user={user} />
             ))}
           </div>
