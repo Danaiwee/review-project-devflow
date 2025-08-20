@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
+import { auth } from "@/auth";
 import { ROUTES } from "@/constants/routes";
 import { getTimeStamp } from "@/lib/utils";
 
@@ -10,15 +11,16 @@ import TagCard from "./TagCard";
 
 interface QuestionCardProps {
   question: Question;
-  showActionBtns?: boolean;
 }
 
-const QuestionCard = ({
-  question,
-  showActionBtns = false,
-}: QuestionCardProps) => {
+const QuestionCard = async ({ question }: QuestionCardProps) => {
+  const session = await auth();
+  const userId = session?.user?.id;
+
   const { _id, title, tags, author, createdAt, upvotes, answers, views } =
     question;
+
+  const showActionBtns = author._id.toString() === userId;
 
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">

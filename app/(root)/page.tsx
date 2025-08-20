@@ -70,11 +70,7 @@ const HomePage = async ({ searchParams }: RouteParams) => {
         render={(questions) => (
           <div className="mt-10 flex w-full flex-col gap-6">
             {questions.map((question) => (
-              <QuestionCard
-                key={question._id}
-                question={question}
-                showActionBtns
-              />
+              <QuestionCard key={question._id} question={question} />
             ))}
           </div>
         )}

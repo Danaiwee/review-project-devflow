@@ -14,6 +14,7 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import UserAvatar from "@/components/navigation/UserAvatar";
 import { ANSWERS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
+import { hasSavedQuestion } from "@/lib/actions/collection.action";
 import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
@@ -26,11 +27,14 @@ export const metadata: Metadata = {
 const QuestionPage = async ({ params }: RouteParams) => {
   const { id } = await params;
 
-  const { data, error } = await getQuestion({ questionId: id });
-  const { question } = data!;
-
+  const { data: questionData, error } = await getQuestion({ questionId: id });
+  const { question } = questionData!;
   const { _id, author, createdAt, answers, views, tags, content, title } =
     question;
+
+  const hasSavedQuestionPromise = hasSavedQuestion({
+    questionId: _id,
+  });
 
   after(async () => {
     await incrementViews({ questionId: id });
@@ -67,7 +71,10 @@ const QuestionPage = async ({ params }: RouteParams) => {
             </Suspense>
 
             <Suspense fallback={<Loader2 className="size-3 animate-spin" />}>
-              <SaveQuestion questionId={_id} hasSavedQuestionPromise="" />
+              <SaveQuestion
+                questionId={_id}
+                hasSavedQuestionPromise={hasSavedQuestionPromise}
+              />
             </Suspense>
           </div>
         </div>

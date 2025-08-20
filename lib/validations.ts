@@ -152,3 +152,11 @@ export const IncrementViewsSchema = z.object({
 export const DeleteQuestionSchema = z.object({
   questionId: z.string().min(1, "Question ID is required"),
 });
+
+export const toggleSaveQuestionSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+});
+
+export const hasSavedQuestionSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+});

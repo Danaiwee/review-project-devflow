@@ -55,3 +55,11 @@ interface IncrementViewsParams {
 interface DeleteQuestionParams {
   questionId: string;
 }
+
+interface ToggleSaveQuestionParams {
+  questionId: string;
+}
+
+interface HasSavedQuestionParams {
+  questionId: string;
+}

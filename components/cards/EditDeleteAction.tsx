@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import { ROUTES } from "@/constants/routes";
 
 import {
   AlertDialog,
@@ -20,7 +23,10 @@ interface EditDeleteActionProps {
 }
 
 const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
-  const handleEdit = () => {};
+  const router = useRouter();
+  const handleEdit = () => {
+    router.push(ROUTES.QUESTION_EDIT(itemId));
+  };
 
   const handleDelete = () => {};
 
