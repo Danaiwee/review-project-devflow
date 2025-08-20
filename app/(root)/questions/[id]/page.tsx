@@ -1,6 +1,7 @@
 import { Loader2 } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { after } from "next/server";
 import React, { Suspense } from "react";
 
 import AllAnswers from "@/components/answers/AllAnswers";
@@ -13,7 +14,7 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import UserAvatar from "@/components/navigation/UserAvatar";
 import { ANSWERS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
-import { getQuestion } from "@/lib/actions/question.action";
+import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -30,6 +31,10 @@ const QuestionPage = async ({ params }: RouteParams) => {
 
   const { _id, author, createdAt, answers, views, tags, content, title } =
     question;
+
+  after(async () => {
+    await incrementViews({ questionId: id });
+  });
 
   return (
     <>

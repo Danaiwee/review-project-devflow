@@ -144,3 +144,11 @@ export const GetQuestionParamsSchema = z.object({
 export const EditQuestionParamsSchema = AskQuestionSchema.extend({
   questionId: z.string().min(1, "Question ID is required"),
 });
+
+export const IncrementViewsSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+});
+
+export const DeleteQuestionSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+});

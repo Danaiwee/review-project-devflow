@@ -47,3 +47,11 @@ interface GetQuestionParams {
 interface EditQuestionParams extends CreateQuestionParams {
   questionId: string;
 }
+
+interface IncrementViewsParams {
+  questionId: string;
+}
+
+interface DeleteQuestionParams {
+  questionId: string;
+}
