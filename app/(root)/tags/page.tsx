@@ -8,6 +8,7 @@ import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { TAG_FILTERS, TAGS } from "@/constants";
 import { EMPTY_TAGS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { getTags } from "@/lib/actions/tag.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Tags",
@@ -15,12 +16,16 @@ export const metadata: Metadata = {
     "Browse and explore tags to find questions, answers, and discussions related to your favorite programming languages, tools, and technologies.",
 };
 
-const TagsPage = () => {
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const TagsPage = async ({ searchParams }: RouteParams) => {
+  const { page, pageSize, filter, query } = await searchParams;
+
+  const { success, data, error } = await getTags({
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter,
+    query,
+  });
+  const { tags } = data || {};
 
   return (
     <>
@@ -43,11 +48,11 @@ const TagsPage = () => {
       <DataRenderer
         success={success}
         error={error}
-        data={TAGS}
+        data={tags}
         empty={EMPTY_TAGS}
-        render={(TAGS) => (
+        render={(tags) => (
           <div className="mt-10 flex w-full flex-wrap gap-4">
-            {TAGS.map((tag) => (
+            {tags.map((tag) => (
               <TagCard
                 key={tag._id}
                 _id={tag._id}

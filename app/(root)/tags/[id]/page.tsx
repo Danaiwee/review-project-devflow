@@ -3,10 +3,12 @@ import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { QUESTIONS, TAGS } from "@/constants";
+import { COLLECTION_FILTERS, QUESTIONS, TAGS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { getTagQuestions } from "@/lib/actions/tag.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Tag",
@@ -14,37 +16,49 @@ export const metadata: Metadata = {
     "Explore all questions, answers, and discussions related to the tag, and stay updated on trends and best practices.",
 };
 
-const TagPage = () => {
-  const tag = TAGS[0];
-  const { _id, name } = tag;
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const TagPage = async ({ params, searchParams }: RouteParams) => {
+  const { id } = await params;
+  const { page, pageSize, filter, query } = await searchParams;
+
+  const { success, data, error } = await getTagQuestions({
+    tagId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter,
+    query,
+  });
+
+  const { questions, tag } = data || {};
+
   return (
     <>
       <section className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="h1-bold text-dark100_light900">{name}</h1>
+        <h1 className="h1-bold text-dark100_light900">{tag?.name}</h1>
       </section>
 
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
-          route={ROUTES.TAG(_id)}
+          route={ROUTES.TAG(id)}
           imgSrc="/icons/search.svg"
           placeholder="Search questions..."
           otherClasses="flex-1"
+        />
+
+        <CommonFilter
+          filters={COLLECTION_FILTERS}
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+          containerClasses="max-md:flex max-md:justify-end"
         />
       </section>
 
       <DataRenderer
         success={success}
         error={error}
-        data={QUESTIONS}
+        data={questions}
         empty={EMPTY_QUESTION}
-        render={(QUESTIONS) => (
+        render={(questions) => (
           <div className="mt-10 flex w-full flex-col gap-6">
-            {QUESTIONS.map((question) => (
+            {questions.map((question) => (
               <QuestionCard key={question._id} question={question} />
             ))}
           </div>

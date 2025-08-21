@@ -12,7 +12,6 @@ import Votes from "@/components/cards/Votes";
 import Preview from "@/components/editor/Preview";
 import AnswerForm from "@/components/forms/AnswerForm";
 import UserAvatar from "@/components/navigation/UserAvatar";
-import { ANSWERS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
 import { getAnswers } from "@/lib/actions/answer.action";
 import { hasSavedQuestion } from "@/lib/actions/collection.action";
@@ -29,7 +28,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
   const { page, pageSize, filter } = await searchParams;
 
-  const { data: questionData, error } = await getQuestion({ questionId: id });
+  const { data: questionData } = await getQuestion({ questionId: id });
   const { question } = questionData!;
   const { _id, author, createdAt, answers, views, tags, content, title } =
     question;

@@ -72,3 +72,7 @@ interface CreateAnswerParams {
 interface GetAnswersParams extends PaginatedSearchParams {
   questionId: string;
 }
+
+interface GetTagQuestionsParams extends PaginatedSearchParams {
+  tagId: string;
+}

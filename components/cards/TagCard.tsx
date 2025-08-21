@@ -55,7 +55,7 @@ const TagCard = ({
       </Badge>
 
       {showCount && (
-        <p className="small-medium text-dark500_light-700">{questions}+</p>
+        <p className="small-medium text-dark500_light-700">{questions}</p>
       )}
     </>
   );

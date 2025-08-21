@@ -6,6 +6,7 @@ import { TAGS } from "@/constants";
 import { EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
 import { getTopQuestions } from "@/lib/actions/question.action";
+import { getPopularTags } from "@/lib/actions/tag.action";
 
 import TagCard from "../cards/TagCard";
 import DataRenderer from "../data/DataRenderer";
@@ -13,6 +14,13 @@ import DataRenderer from "../data/DataRenderer";
 const RightSidebar = async () => {
   const { success, data, error } = await getTopQuestions();
   const { questions } = data || {};
+
+  const {
+    success: tagsSuccess,
+    data: tagsData,
+    error: tagsError,
+  } = await getPopularTags();
+  const { tags } = tagsData || {};
 
   return (
     <aside className="pt-36 custom-scrollbar background-light900_dark200 light-border sticky right-0 top-0 flex h-screen w-[350px] flex-col gap-6 overflow-y-auto border-l p-6 shadow-light-300 dark:shadow-none max-xl:hidden">
@@ -53,13 +61,13 @@ const RightSidebar = async () => {
         <h3 className="h3-bold text-dark200_light900">Popular Tags</h3>
 
         <DataRenderer
-          data={TAGS}
+          data={tags}
           empty={EMPTY_TAGS}
-          success={success}
-          error={error}
-          render={(TAGS) => (
+          success={tagsSuccess}
+          error={tagsError}
+          render={(tags) => (
             <div className="mt-7 flex flex-col gap-4">
-              {TAGS.map((tag) => (
+              {tags.map((tag) => (
                 <TagCard
                   key={tag._id}
                   _id={tag._id}
