@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { ROUTES } from "@/constants/routes";
+import { hasVoted } from "@/lib/actions/vote.action";
 import { cn, getTimeStamp } from "@/lib/utils";
 
 import Votes from "./Votes";
@@ -15,7 +16,7 @@ interface AnswerCardProps {
   showActionBtns?: boolean;
 }
 
-const AnswerCard = ({
+const AnswerCard = async ({
   answer,
   containerClasses,
   showReadMore = false,
@@ -23,6 +24,12 @@ const AnswerCard = ({
 }: AnswerCardProps) => {
   const { _id, author, content, createdAt, upvotes, downvotes, question } =
     answer;
+
+  const { data } = await hasVoted({
+    targetId: _id,
+    targetType: "answer",
+  });
+  const { hasDownvoted, hasUpvoted } = data!;
 
   return (
     <div
@@ -64,9 +71,10 @@ const AnswerCard = ({
             <Votes
               targetType="answer"
               targetId={_id}
-              hasVotedPromise=""
               upvotes={upvotes}
               downvotes={downvotes}
+              hasUpvoted={hasUpvoted}
+              hasDownvoted={hasDownvoted}
             />
           </Suspense>
         </div>
