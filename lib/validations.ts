@@ -54,9 +54,9 @@ export const ProfileSchema = z.object({
     .string()
     .min(3, { message: "Username must be at least 3 characters" })
     .max(100, { message: "Username cannot exceed 100 characters" }),
-  portfolio: z.string().url({ message: "Please provide a valid URL" }),
-  location: z.string().min(3, { message: "Please provide proper location" }),
-  bio: z.string().min(3, { message: "bio must must be at least 3 characters" }),
+  portfolio: z.string().optional(),
+  location: z.string().optional(),
+  bio: z.string().optional(),
 });
 
 export const AskQuestionSchema = z.object({
@@ -190,4 +190,13 @@ export const GetUserAnswersSchema = PaginatedSearchParamsSchema.extend({
 
 export const GetUserTopTagsSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
+});
+
+export const EditUserProfileSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+  name: z.string().optional(),
+  username: z.string().optional(),
+  portfoilio: z.string().optional(),
+  location: z.string().optional(),
+  bio: z.string().optional(),
 });

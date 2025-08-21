@@ -92,3 +92,12 @@ interface GetUserAnswersParams extends PaginatedSearchParams {
 interface GetUserTopTagsParams {
   userId: string;
 }
+
+interface EditUserPrfileParams {
+  userId: string;
+  name?: string;
+  username?: string;
+  portfolio?: string;
+  location?: string;
+  bio?: string;
+}

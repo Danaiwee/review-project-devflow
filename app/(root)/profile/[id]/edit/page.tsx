@@ -1,8 +1,10 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import React from "react";
 
+import { auth } from "@/auth";
 import ProfileForm from "@/components/forms/ProfileForm";
-import { USERS } from "@/constants";
+import { getUser } from "@/lib/actions/user.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Edit Profile",
@@ -10,8 +12,15 @@ export const metadata: Metadata = {
     "Update and customize your developer profile, including your name, username, location, portfolio, and bio details.",
 };
 
-const EditProfilePage = () => {
-  const user = USERS[3];
+const EditProfilePage = async ({ params }: RouteParams) => {
+  const { id } = await params;
+  if (!id) return notFound();
+
+  const session = await auth();
+  if (session?.user?.id !== id) return notFound();
+
+  const { data } = await getUser({ userId: id });
+  const { user } = data!;
 
   return (
     <>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
 
+import { auth } from "@/auth";
 import AnswerCard from "@/components/cards/AnswerCard";
 import QuestionCard from "@/components/cards/QuestionCard";
 import TagCard from "@/components/cards/TagCard";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ANSWERS, TAGS } from "@/constants";
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/empty";
+import { ROUTES } from "@/constants/routes";
 import {
   getUser,
   getUserAnswers,
@@ -32,6 +34,9 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
   const { page, pageSize } = await searchParams;
   if (!id) notFound();
+
+  const session = await auth();
+  const loggedInUserId = session?.user?.id;
 
   const {
     success: userSuccess,
@@ -78,8 +83,6 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     error: userTopTagsError,
   } = await getUserTopTags({ userId: id });
   const { tags } = userTopTagsData || {};
-
-  console.log(tags);
 
   return (
     <>
@@ -130,8 +133,8 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
         </div>
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          {user._id === id && (
-            <Link href="/profile/edit">
+          {loggedInUserId === id && (
+            <Link href={ROUTES.PROFILE_EDIT(id)}>
               <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-12 min-w-44 px-4 py-3">
                 Edit Profile
               </Button>

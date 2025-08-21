@@ -2,9 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Path, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
+import { ROUTES } from "@/constants/routes";
+import { editUserProfile } from "@/lib/actions/user.action";
 import { ProfileSchema } from "@/lib/validations";
 
 import { Button } from "../ui/button";
@@ -25,6 +30,9 @@ interface ProfileFormProps {
 }
 
 const ProfileForm = ({ user, defaultValues }: ProfileFormProps) => {
+  const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
@@ -36,9 +44,29 @@ const ProfileForm = ({ user, defaultValues }: ProfileFormProps) => {
     },
   });
 
-  const handleUpdateProfile = () => {};
+  const handleUpdateProfile = async (data: z.infer<typeof ProfileSchema>) => {
+    setIsPending(true);
+    try {
+      const result = await editUserProfile({
+        userId: user._id,
+        ...data,
+      });
 
-  const isPending = false;
+      if (result.success) {
+        toast("Success", { description: "Updated profile successfully" });
+
+        router.push(ROUTES.PROFILE(user._id));
+        return;
+      }
+
+      return;
+    } catch (error) {
+      console.log(error);
+      toast("Error", { description: "Error in updating profile" });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -65,7 +93,6 @@ const ProfileForm = ({ user, defaultValues }: ProfileFormProps) => {
                     />
                   ) : (
                     <Input
-                      required
                       type="text"
                       {...field}
                       className="no-focus paragraph-regular light-border-2 background-light800_dark300 text-dark300_light700 min-h-[56px] border"

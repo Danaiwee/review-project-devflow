@@ -2,13 +2,16 @@
 
 import { FilterQuery, PipelineStage } from "mongoose";
 import mongoose from "mongoose";
+import { revalidatePath } from "next/cache";
 
+import { ROUTES } from "@/constants/routes";
 import { Answer, Question, User } from "@/database";
 
 import action from "../handler/action";
 import handleError from "../handler/error";
 import { NotFoundError } from "../http-errors";
 import {
+  EditUserProfileSchema,
   GetUserAnswersSchema,
   GetUserQuestionsSchema,
   GetUserSchema,
@@ -189,6 +192,7 @@ export async function getUserAnswers(
   }
 }
 
+//TODO: Review
 export async function getUserTopTags(
   params: GetUserTopTagsParams
 ): Promise<ActionResponse<{ tags: Tag[] }>> {
@@ -233,6 +237,61 @@ export async function getUserTopTags(
       success: true,
       data: {
         tags: JSON.parse(JSON.stringify(tags)),
+      },
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function editUserProfile(
+  params: EditUserPrfileParams
+): Promise<ActionResponse<{ user: User }>> {
+  const validationResult = await action({
+    params,
+    schema: EditUserProfileSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const {
+    name,
+    username,
+    portfolio,
+    location,
+    bio,
+    userId: editUserId,
+  } = validationResult.params!;
+  const userId = validationResult.session?.user?.id;
+
+  try {
+    if (editUserId !== userId) throw new Error("You cannot edit profile");
+
+    const user = await User.findById(editUserId);
+    if (!user) throw new NotFoundError("User");
+
+    if (user.username !== username) {
+      const isExistingUsername = await User.findOne({ username });
+      if (isExistingUsername) throw new Error("Invalid username");
+
+      user.username = username;
+    }
+
+    if (user.name !== name) user.name = name;
+    if (user.portfolio !== portfolio) user.portfolio = portfolio;
+    if (user.location !== location) user.location = location;
+    if (user.bio !== bio) user.bio = bio;
+
+    await user.save();
+
+    revalidatePath(ROUTES.PROFILE(editUserId));
+
+    return {
+      success: true,
+      data: {
+        user: JSON.parse(JSON.stringify(user)),
       },
     };
   } catch (error) {
