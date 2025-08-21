@@ -14,6 +14,7 @@ import AnswerForm from "@/components/forms/AnswerForm";
 import UserAvatar from "@/components/navigation/UserAvatar";
 import { ANSWERS } from "@/constants";
 import { ROUTES } from "@/constants/routes";
+import { getAnswers } from "@/lib/actions/answer.action";
 import { hasSavedQuestion } from "@/lib/actions/collection.action";
 import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
@@ -24,8 +25,9 @@ export const metadata: Metadata = {
     "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
 };
 
-const QuestionPage = async ({ params }: RouteParams) => {
+const QuestionPage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
+  const { page, pageSize, filter } = await searchParams;
 
   const { data: questionData, error } = await getQuestion({ questionId: id });
   const { question } = questionData!;
@@ -35,6 +37,22 @@ const QuestionPage = async ({ params }: RouteParams) => {
   const hasSavedQuestionPromise = hasSavedQuestion({
     questionId: _id,
   });
+
+  const {
+    success: answersSuccess,
+    data: answersData,
+    error: answersError,
+  } = await getAnswers({
+    questionId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter,
+  });
+  const {
+    totalAnswers,
+    answers: allAnswers,
+    isNext: answersIsNext,
+  } = answersData || {};
 
   after(async () => {
     await incrementViews({ questionId: id });
@@ -118,12 +136,12 @@ const QuestionPage = async ({ params }: RouteParams) => {
 
       <section className="my-5">
         <AllAnswers
-          page={1}
-          isNext={false}
-          data={ANSWERS}
-          success={true}
-          error={error}
-          totalAnswers={5}
+          page={Number(page) || 1}
+          isNext={answersIsNext || false}
+          data={allAnswers}
+          success={answersSuccess}
+          error={answersError}
+          totalAnswers={totalAnswers || 0}
         />
       </section>
 

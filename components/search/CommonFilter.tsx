@@ -28,7 +28,7 @@ interface CommonFilterProps {
 const CommonFilter = ({
   filters,
   otherClasses = "",
-  containerClasses = "",
+  containerClasses = "",  
 }: CommonFilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();

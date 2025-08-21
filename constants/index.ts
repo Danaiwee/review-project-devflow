@@ -184,7 +184,7 @@ export const HOMEPAGE_FILTERS = [
 ];
 
 export const ANSWER_FILTERS = [
-  { name: "Newest", value: "latest" },
+  { name: "Newest", value: "newest" },
   { name: "Oldest", value: "oldest" },
   { name: "Popular", value: "popular" },
 ];

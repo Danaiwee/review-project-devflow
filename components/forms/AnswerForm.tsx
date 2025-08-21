@@ -4,10 +4,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
+import { createAnswer } from "@/lib/actions/answer.action";
 import { AnswerSchema } from "@/lib/validations";
 
 import Editor from "../editor/Editor";
@@ -32,6 +34,7 @@ const AnswerForm = ({
   questionContent,
 }: AnswerFormProps) => {
   const editorRef = useRef<MDXEditorMethods>(null);
+  const [isAnswering, startAnsweringTransition] = useTransition();
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -41,12 +44,27 @@ const AnswerForm = ({
   });
 
   const handleCreateAnswer = (data: z.infer<typeof AnswerSchema>) => {
-    console.log(data);
+    startAnsweringTransition(async () => {
+      const result = await createAnswer({
+        content: data.content,
+        questionId,
+      });
+
+      if (result.success) {
+        toast("Success", { description: "Created answer successfully" });
+
+        form.reset();
+        if (editorRef.current) {
+          editorRef.current.setMarkdown("");
+        }
+      } else {
+        toast("Error", { description: "An unexpected error occurred" });
+      }
+    });
   };
 
   const isAISubmitting = false;
   const handleGenerateAI = () => {};
-  const isAnswering = false;
 
   return (
     <>

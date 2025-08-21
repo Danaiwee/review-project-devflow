@@ -24,8 +24,6 @@ const SaveQuestion = ({
   const { data } = use(hasSavedQuestionPromise);
   const { hasSaved } = data || {};
 
-  console.log(hasSaved);
-
   const handleSaveQuestion = async () => {
     if (isLoading) return;
     if (!userId) {

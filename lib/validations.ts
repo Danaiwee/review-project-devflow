@@ -160,3 +160,14 @@ export const toggleSaveQuestionSchema = z.object({
 export const hasSavedQuestionSchema = z.object({
   questionId: z.string().min(1, "Question ID is required"),
 });
+
+export const CreateAnswerSchema = z.object({
+  questionId: z.string().min(1, "Question ID is required"),
+  content: z
+    .string()
+    .min(20, "Content is required and contain at least 20 characters"),
+});
+
+export const GetAnswersSchema = PaginatedSearchParamsSchema.extend({
+  questionId: z.string().min(1, "Question ID is required"),
+});

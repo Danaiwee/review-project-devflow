@@ -136,7 +136,10 @@ export async function getSavedQuestions(
 
   try {
     const pipeline: PipelineStage[] = [
+      //1. Keep only collections created by the logged-in user.
       { $match: { author: new mongoose.Types.ObjectId(userId) } },
+
+      //2.Replace the question ObjectId with the actual Question document.
       {
         $lookup: {
           from: "questions",
@@ -145,7 +148,11 @@ export async function getSavedQuestions(
           as: "question",
         },
       },
+
+      //3.Since $lookup always returns an array, $unwind flattens it from array → object.
       { $unwind: "$question" },
+
+      //4.Replace question.author ObjectId with the actual User document.
       {
         $lookup: {
           from: "users",
@@ -154,7 +161,11 @@ export async function getSavedQuestions(
           as: "question.author",
         },
       },
+
+      //5.Convert question.author from array → object:
       { $unwind: "$question.author" },
+
+      //6.Replace tags IDs with real tag documents:
       {
         $lookup: {
           from: "tags",
@@ -182,7 +193,7 @@ export async function getSavedQuestions(
     ]);
 
     pipeline.push({ $sort: sortCriteria }, { $skip: skip }, { $limit: limit });
-    pipeline.push({ $project: { question: 1, author: 1 } });
+    pipeline.push({ $project: { question: 1, author: 1 } }); //Keeps only the fields you care about:
 
     const questions = await Collection.aggregate(pipeline);
 
