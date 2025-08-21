@@ -16,6 +16,7 @@ import { ROUTES } from "@/constants/routes";
 import { getAnswers } from "@/lib/actions/answer.action";
 import { hasSavedQuestion } from "@/lib/actions/collection.action";
 import { getQuestion, incrementViews } from "@/lib/actions/question.action";
+import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -33,10 +34,6 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
   const { _id, author, createdAt, answers, views, tags, content, title } =
     question;
 
-  const hasSavedQuestionPromise = hasSavedQuestion({
-    questionId: _id,
-  });
-
   const {
     success: answersSuccess,
     data: answersData,
@@ -52,6 +49,16 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
     answers: allAnswers,
     isNext: answersIsNext,
   } = answersData || {};
+
+  const { data } = await hasVoted({
+    targetId: _id,
+    targetType: "question",
+  });
+  const { hasUpvoted, hasDownvoted } = data!;
+
+  const hasSavedQuestionPromise = hasSavedQuestion({
+    questionId: _id,
+  });
 
   after(async () => {
     await incrementViews({ questionId: id });
@@ -83,7 +90,8 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
                 upvotes={question.upvotes}
                 downvotes={question.downvotes}
                 targetId={_id}
-                hasVotedPromise=""
+                hasUpvoted={hasUpvoted}
+                hasDownvoted={hasDownvoted}
               />
             </Suspense>
 

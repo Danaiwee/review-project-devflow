@@ -14,7 +14,6 @@ import ProfileLink from "@/components/profile/ProfileLink";
 import Stats from "@/components/profile/Stats";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ANSWERS, TAGS } from "@/constants";
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
 import {

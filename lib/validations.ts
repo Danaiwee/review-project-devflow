@@ -200,3 +200,18 @@ export const EditUserProfileSchema = z.object({
   location: z.string().optional(),
   bio: z.string().optional(),
 });
+
+export const HasVotedSchema = z.object({
+  targetId: z.string().min(1, "Target ID is required"),
+  targetType: z.enum(["question", "answer"]),
+});
+
+export const CreateVotedSchema = z.object({
+  targetId: z.string().min(1, "Target ID is required"),
+  targetType: z.enum(["question", "answer"]),
+  voteType: z.enum(["upvote", "downvote"]),
+});
+
+export const UpdateVoteCountSchema = CreateVotedSchema.extend({
+  change: z.number().int().min(-1).max(1),
+});

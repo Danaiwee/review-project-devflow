@@ -1,25 +1,58 @@
+"use client";
 import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
+import { createVote } from "@/lib/actions/vote.action";
 import { formatNumber } from "@/lib/utils";
 
 interface VotesProps {
   upvotes: number;
   downvotes: number;
-  hasVotedPromise?: string;
   targetId: string;
-  targetType: string;
+  targetType: "question" | "answer";
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
 }
 
 const Votes = ({
   upvotes,
   downvotes,
-  hasVotedPromise,
+  hasUpvoted,
+  hasDownvoted,
   targetId,
   targetType,
 }: VotesProps) => {
-  const hasUpvoted = true;
-  const hasDownvoted = false;
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleVote = async (voteType: "upvote" | "downvote") => {
+    setIsLoading(false);
+    try {
+      const result = await createVote({
+        targetId,
+        targetType,
+        voteType,
+      });
+
+      if (result.success) {
+        const successMessage =
+          voteType === "upvote"
+            ? `Upvote ${!hasUpvoted ? "added" : "removed"} successfully`
+            : `Downvote ${!hasDownvoted ? "added" : "removed"} successfully`;
+
+        toast("Success", {
+          description: `${successMessage}`,
+        });
+        return;
+      }
+      return;
+    } catch (error) {
+      console.log(error);
+      toast("Error", { description: `Failed to ${voteType} ${targetType}` });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="flex-center gap-2.5">
@@ -31,6 +64,7 @@ const Votes = ({
           alt="upvote"
           className={`cursor-pointer ${isLoading && "opacity-50"}`}
           aria-label="Upvote"
+          onClick={() => handleVote("upvote")}
         />
 
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1">
@@ -48,6 +82,7 @@ const Votes = ({
           alt="downvote"
           className={`cursor-pointer ${isLoading && "opacity-50"}`}
           aria-label="Downvote"
+          onClick={() => handleVote("downvote")}
         />
 
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1">
