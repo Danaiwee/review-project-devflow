@@ -175,3 +175,19 @@ export const GetAnswersSchema = PaginatedSearchParamsSchema.extend({
 export const GetTagQuestionsSchema = PaginatedSearchParamsSchema.extend({
   tagId: z.string().min(1, "Tag ID is required"),
 });
+
+export const GetUserSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export const GetUserQuestionsSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export const GetUserAnswersSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().min(1, "User ID is required"),
+});
+
+export const GetUserTopTagsSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});

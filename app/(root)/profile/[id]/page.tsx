@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import React from "react";
 
 import AnswerCard from "@/components/cards/AnswerCard";
@@ -12,8 +13,14 @@ import ProfileLink from "@/components/profile/ProfileLink";
 import Stats from "@/components/profile/Stats";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ANSWERS, QUESTIONS, TAGS, USERS } from "@/constants";
+import { ANSWERS, TAGS } from "@/constants";
 import { EMPTY_ANSWERS, EMPTY_QUESTION, EMPTY_TAGS } from "@/constants/empty";
+import {
+  getUser,
+  getUserAnswers,
+  getUserQuestions,
+  getUserTopTags,
+} from "@/lib/actions/user.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Profile",
@@ -21,14 +28,59 @@ export const metadata: Metadata = {
     "View and manage your personal developer profile, including your questions, answers, collections, reputation, and activity within the community.",
 };
 
-const ProfilePage = () => {
-  const user = USERS[3];
-  const id = "u4";
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const ProfilePage = async ({ params, searchParams }: RouteParams) => {
+  const { id } = await params;
+  const { page, pageSize } = await searchParams;
+  if (!id) notFound();
+
+  const {
+    success: userSuccess,
+    data: userData,
+    error: userError,
+  } = await getUser({ userId: id });
+  const { user } = userData!;
+
+  if (!userSuccess)
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        <h1 className="h1-bold text-dark100_light900">User not found</h1>
+        <p className="paragraph-regular text-dark200_light800 max-w-md">
+          {userError?.message}
+        </p>
+      </div>
+    );
+
+  const {
+    success: userQuestionsSuccess,
+    data: userQuestionsData,
+    error: userQuestionsError,
+  } = await getUserQuestions({
+    userId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+  });
+  const { questions } = userQuestionsData || {};
+
+  const {
+    success: userAnswersSuccess,
+    data: userAnswersData,
+    error: userAnswersError,
+  } = await getUserAnswers({
+    userId: id,
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+  });
+  const { answers } = userAnswersData || {};
+
+  const {
+    success: userTopTagsSuccess,
+    data: userTopTagsData,
+    error: userTopTagsError,
+  } = await getUserTopTags({ userId: id });
+  const { tags } = userTopTagsData || {};
+
+  console.log(tags);
+
   return (
     <>
       <section className="flex flex-col-reverse items-start justify-between sm:flex-row">
@@ -37,7 +89,7 @@ const ProfilePage = () => {
             id={user._id}
             name={user.name}
             imageUrl={user.image}
-            className="size-[140px] rounded-full object-cover"
+            className="size-[100px] rounded-full object-cover"
             fallbackClassName="text-6xl"
           />
 
@@ -111,13 +163,13 @@ const ProfilePage = () => {
             className="mt-5 flex w-full flex-col gap-6"
           >
             <DataRenderer
-              success={success}
-              error={error}
-              data={QUESTIONS}
+              success={userQuestionsSuccess}
+              error={userQuestionsError}
+              data={questions}
               empty={EMPTY_QUESTION}
-              render={(QUESTIONS) => (
+              render={(questions) => (
                 <div className="flex w-full flex-col gap-6">
-                  {QUESTIONS.map((question) => (
+                  {questions.map((question) => (
                     <QuestionCard key={question._id} question={question} />
                   ))}
                 </div>
@@ -127,13 +179,13 @@ const ProfilePage = () => {
 
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <DataRenderer
-              success={success}
-              error={error}
-              data={ANSWERS}
+              success={userAnswersSuccess}
+              error={userAnswersError}
+              data={answers}
               empty={EMPTY_ANSWERS}
-              render={(ANSWERS) => (
+              render={(answers) => (
                 <div className="flex w-full flex-col gap-10">
-                  {ANSWERS.map((answer) => (
+                  {answers.map((answer) => (
                     <AnswerCard
                       key={answer._id}
                       answer={answer}
@@ -153,18 +205,18 @@ const ProfilePage = () => {
 
           <div className="mt-7 flex flex-col gap-4">
             <DataRenderer
-              success={success}
-              error={error}
-              data={TAGS}
+              success={userTopTagsSuccess}
+              error={userTopTagsError}
+              data={tags}
               empty={EMPTY_TAGS}
-              render={(TAGS) => (
+              render={(tags) => (
                 <div className="mt-3 flex w-full flex-col gap-4">
-                  {TAGS.map((tag) => (
+                  {tags.map((tag) => (
                     <TagCard
                       key={tag._id}
                       _id={tag._id}
                       name={tag.name}
-                      questions={tag.questions}
+                      questions={tag.count}
                       showCount
                       compact
                     />

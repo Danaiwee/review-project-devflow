@@ -5,6 +5,7 @@ declare global {
     _id: string;
     name: string;
     questions?: number;
+    count?: number;
   }
 
   interface Author {

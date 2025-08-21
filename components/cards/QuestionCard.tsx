@@ -20,7 +20,7 @@ const QuestionCard = async ({ question }: QuestionCardProps) => {
   const { _id, title, tags, author, createdAt, upvotes, answers, views } =
     question;
 
-  const showActionBtns = author._id.toString() === userId;
+  const showActionBtns = author?._id?.toString() === userId;
 
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
@@ -42,7 +42,7 @@ const QuestionCard = async ({ question }: QuestionCardProps) => {
 
       <div className="mt-3.5 flex w-full flex-wrap gap-2">
         {tags.map((tag) => (
-          <TagCard key={tag._id} _id={tag._id} name={tag.name} compact />
+          <TagCard key={tag?._id} _id={tag._id} name={tag.name} compact />
         ))}
       </div>
 

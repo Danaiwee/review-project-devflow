@@ -76,3 +76,19 @@ interface GetAnswersParams extends PaginatedSearchParams {
 interface GetTagQuestionsParams extends PaginatedSearchParams {
   tagId: string;
 }
+
+interface GetUserParams {
+  userId: string;
+}
+
+interface GetUserQuestionsParams extends PaginatedSearchParams {
+  userId: string;
+}
+
+interface GetUserAnswersParams extends PaginatedSearchParams {
+  userId: string;
+}
+
+interface GetUserTopTagsParams {
+  userId: string;
+}
