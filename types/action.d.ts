@@ -122,3 +122,7 @@ interface AIAnswerParams {
   questionContent: string;
   userAnswer: string;
 }
+
+interface DeleteQuestionParams {
+  questionId: string;
+}

@@ -11,9 +11,13 @@ import TagCard from "./TagCard";
 
 interface QuestionCardProps {
   question: Question;
+  showEdit?: boolean;
 }
 
-const QuestionCard = async ({ question }: QuestionCardProps) => {
+const QuestionCard = async ({
+  question,
+  showEdit = false,
+}: QuestionCardProps) => {
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -37,7 +41,9 @@ const QuestionCard = async ({ question }: QuestionCardProps) => {
           </Link>
         </div>
 
-        {showActionBtns && <EditDeleteAction type="Question" itemId={_id} />}
+        {showEdit && showActionBtns && (
+          <EditDeleteAction type="Question" itemId={_id} />
+        )}
       </div>
 
       <div className="mt-3.5 flex w-full flex-wrap gap-2">

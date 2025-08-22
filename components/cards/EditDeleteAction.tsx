@@ -1,9 +1,13 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 import { ROUTES } from "@/constants/routes";
+import { deleteQuestion } from "@/lib/actions/question.action";
 
 import {
   AlertDialog,
@@ -24,11 +28,34 @@ interface EditDeleteActionProps {
 
 const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
   const router = useRouter();
+  const [isPending, setIsPending] = useState(false);
+
   const handleEdit = () => {
     router.push(ROUTES.QUESTION_EDIT(itemId));
   };
 
-  const handleDelete = () => {};
+  const handleDelete = async () => {
+    setIsPending(true);
+    try {
+      const result = await deleteQuestion({ questionId: itemId });
+
+      if (result.success) {
+        toast("Success", { description: "Deleted question successcully" });
+        return;
+      }
+
+      toast("Error", {
+        description: "Something went wrong, please try again later",
+      });
+    } catch (error) {
+      console.log(error);
+      toast("Error", {
+        description: "Something went wrong, please try again later",
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <div
@@ -69,7 +96,11 @@ const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
               className="border-primary-100 bg-red-500 text-light-800"
               onClick={handleDelete}
             >
-              Delete
+              {isPending ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                "Delete"
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

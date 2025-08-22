@@ -172,7 +172,11 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
               render={(questions) => (
                 <div className="flex w-full flex-col gap-6">
                   {questions.map((question) => (
-                    <QuestionCard key={question._id} question={question} />
+                    <QuestionCard
+                      key={question._id}
+                      question={question}
+                      showEdit
+                    />
                   ))}
                 </div>
               )}
@@ -192,8 +196,8 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
                       key={answer._id}
                       answer={answer}
                       containerClasses="card-wrapper rounded-[10px] p-9 sm:px-11"
-                      showActionBtns={user._id === answer.author._id}
                       showReadMore
+                      showEdit
                     />
                   ))}
                 </div>
