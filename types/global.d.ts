@@ -55,9 +55,8 @@ declare global {
   }
 
   interface Country {
-    name: {
-      common: string;
-    };
+    name: string;
+    value: string;
   }
 
   interface Badges {

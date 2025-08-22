@@ -34,7 +34,7 @@ const JobFilter = ({
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: "location",
-      value,
+      value: value.toLowerCase(),
     });
 
     router.push(newUrl, { scroll: false });
@@ -60,9 +60,9 @@ const JobFilter = ({
 
         <SelectContent>
           <SelectGroup>
-            {countriesList.map((country) => (
-              <SelectItem key={country.name.common} value={country.name.common}>
-                {country.name.common}
+            {countriesList.map((country: Country) => (
+              <SelectItem key={country.name} value={country.value}>
+                {country.name}
               </SelectItem>
             ))}
           </SelectGroup>

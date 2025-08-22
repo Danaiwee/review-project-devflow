@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from "next";
 import React from "react";
 
@@ -5,9 +6,10 @@ import JobCard from "@/components/cards/JobCard";
 import DataRenderer from "@/components/data/DataRenderer";
 import JobFilter from "@/components/search/JobFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { COUNTRIES, JOBS } from "@/constants";
+import { COUNTRIES } from "@/constants";
 import { EMPTY_JOBS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
+import { fetchJobs } from "@/lib/actions/job.action";
 
 export const metadata: Metadata = {
   title: "DevFlow | Find Jobs",
@@ -15,12 +17,14 @@ export const metadata: Metadata = {
     "Discover the latest developer job opportunities, filter by location and skills, and apply to positions that match your expertise.",
 };
 
-const JobsPage = () => {
-  const success = true;
-  const error = {
-    message: null,
-    details: null,
-  };
+const JobsPage = async ({ searchParams }: RouteParams) => {
+  const { page, query, location } = await searchParams;
+
+  const { success, data: jobs } = await fetchJobs({
+    page: Number(page) || 1,
+    query,
+    location,
+  });
 
   return (
     <>
@@ -43,12 +47,11 @@ const JobsPage = () => {
 
       <DataRenderer
         success={success}
-        data={JOBS}
-        error={error}
+        data={jobs}
         empty={EMPTY_JOBS}
-        render={(JOBS) => (
+        render={(jobs) => (
           <div className="mt-10 flex w-full flex-col gap-6">
-            {JOBS.map((job) => (
+            {jobs.map((job: any) => (
               <JobCard key={job.id} job={job} />
             ))}
           </div>
