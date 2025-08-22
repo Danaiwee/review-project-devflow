@@ -5,7 +5,6 @@ import { Account } from "@/database";
 import handleError from "@/lib/handler/error";
 import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import { AccountSchema } from "@/lib/validations";
-import { APIErrorReponse } from "@/types/global";
 
 //Get account by providerAccountId
 export async function POST(request: Request) {

@@ -4,12 +4,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useRef, useTransition } from "react";
+import { useSession } from "next-auth/react";
+import { useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 
 import { createAnswer } from "@/lib/actions/answer.action";
+import { api } from "@/lib/api";
 import { AnswerSchema } from "@/lib/validations";
 
 import Editor from "../editor/Editor";
@@ -33,8 +35,11 @@ const AnswerForm = ({
   questionTitle,
   questionContent,
 }: AnswerFormProps) => {
+  const session = useSession();
+
   const editorRef = useRef<MDXEditorMethods>(null);
   const [isAnswering, startAnsweringTransition] = useTransition();
+  const [isAISubmitting, setIsAISubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -63,8 +68,47 @@ const AnswerForm = ({
     });
   };
 
-  const isAISubmitting = false;
-  const handleGenerateAI = () => {};
+  const handleGenerateAI = async () => {
+    if (session.status !== "authenticated") {
+      return toast("Error", {
+        description: "Please log in to use AI generate",
+      });
+    }
+
+    setIsAISubmitting(true);
+
+    const userAnswer = editorRef.current?.getMarkdown() || "";
+
+    try {
+      const { success, data, error } = await api.ai.AIAnswer({
+        questionTitle,
+        questionContent,
+        userAnswer,
+      });
+
+      if (!success) {
+        return toast("Error", {
+          description: error?.message || "Failed to generate AI answer",
+        });
+      }
+
+      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+
+      if (editorRef.current) {
+        editorRef.current.setMarkdown(formattedAnswer);
+
+        form.setValue("content", formattedAnswer);
+        form.trigger("content");
+      }
+
+      toast("Success", { description: "AI geerated answer successfully" });
+    } catch (error) {
+      console.log(error);
+      toast("Error", { description: "Error in generating AI answer" });
+    } finally {
+      setIsAISubmitting(false);
+    }
+  };
 
   return (
     <>

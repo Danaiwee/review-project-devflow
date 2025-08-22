@@ -116,3 +116,9 @@ interface CreateVoteParams {
 interface UpdateVoteCountParams extends CreateVoteParams {
   change: 1 | -1;
 }
+
+interface AIAnswerParams {
+  questionTitle: string;
+  questionContent: string;
+  userAnswer: string;
+}

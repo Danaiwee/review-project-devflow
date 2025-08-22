@@ -215,3 +215,11 @@ export const CreateVotedSchema = z.object({
 export const UpdateVoteCountSchema = CreateVotedSchema.extend({
   change: z.number().int().min(-1).max(1),
 });
+
+export const AIAnswerSchema = z.object({
+  questionTitle: z.string().min(1, "Question title is required"),
+  questionContent: z.string().min(1, "Question content is required"),
+  userAnswer: z
+    .string()
+    .min(100, "Answer is required and must contain at least 100 characters"),
+});

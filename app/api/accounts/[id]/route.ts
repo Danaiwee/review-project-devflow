@@ -7,7 +7,6 @@ import handleError from "@/lib/handler/error";
 import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
 import { AccountSchema } from "@/lib/validations";
-import { APIErrorReponse } from "@/types/global";
 
 //Get account by ID
 export async function GET(
