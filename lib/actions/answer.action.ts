@@ -4,12 +4,16 @@ import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 
 import { ROUTES } from "@/constants/routes";
-import { Answer, Question } from "@/database";
+import { Answer, Question, Vote } from "@/database";
 
 import action from "../handler/action";
 import handleError from "../handler/error";
 import { NotFoundError } from "../http-errors";
-import { CreateAnswerSchema, GetAnswersSchema } from "../validations";
+import {
+  CreateAnswerSchema,
+  DeleteAnswerSchema,
+  GetAnswersSchema,
+} from "../validations";
 
 export async function createAnswer(
   params: CreateAnswerParams
@@ -125,5 +129,58 @@ export async function getAnswers(
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteAnswer(
+  params: DeleteAnswerParams
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: DeleteAnswerSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { answerId } = validationResult.params!;
+  const userId = validationResult.session?.user?.id;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const answer = await Answer.findById(answerId).session(session);
+    if (!answer) throw new NotFoundError("Answer");
+
+    const question = await Question.findById(
+      answer.question.toString()
+    ).session(session);
+    if (!question) throw new NotFoundError("Question");
+
+    if (answer.author.toString() !== userId)
+      throw new Error("You cannot delete this answer");
+
+    await Vote.deleteMany({
+      targetId: answer._id,
+      targetType: "answer",
+    }).session(session);
+
+    question.answers -= 1;
+    await question.save({ session });
+
+    await Answer.findByIdAndDelete(answerId).session(session);
+
+    await session.commitTransaction();
+
+    revalidatePath(ROUTES.PROFILE(userId!));
+
+    return { success: true };
+  } catch (error) {
+    await session.abortTransaction();
+    return handleError(error) as ErrorResponse;
+  } finally {
+    await session.endSession();
   }
 }

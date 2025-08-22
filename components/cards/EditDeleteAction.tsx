@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { ROUTES } from "@/constants/routes";
+import { deleteAnswer } from "@/lib/actions/answer.action";
 import { deleteQuestion } from "@/lib/actions/question.action";
 
 import {
@@ -36,24 +37,49 @@ const EditDeleteAction = ({ type, itemId }: EditDeleteActionProps) => {
 
   const handleDelete = async () => {
     setIsPending(true);
-    try {
-      const result = await deleteQuestion({ questionId: itemId });
 
-      if (result.success) {
-        toast("Success", { description: "Deleted question successcully" });
-        return;
+    if (type === "Question") {
+      try {
+        const result = await deleteQuestion({ questionId: itemId });
+
+        if (result.success) {
+          toast("Success", { description: "Deleted question successcully" });
+          return;
+        }
+
+        toast("Error", {
+          description: "Something went wrong, please try again later",
+        });
+      } catch (error) {
+        console.log(error);
+        toast("Error", {
+          description: "Something went wrong, please try again later",
+        });
+      } finally {
+        setIsPending(false);
       }
+    }
 
-      toast("Error", {
-        description: "Something went wrong, please try again later",
-      });
-    } catch (error) {
-      console.log(error);
-      toast("Error", {
-        description: "Something went wrong, please try again later",
-      });
-    } finally {
-      setIsPending(false);
+    if (type === "Answer") {
+      try {
+        const result = await deleteAnswer({ answerId: itemId });
+
+        if (result.success) {
+          toast("Success", { description: "Deleted answer successcully" });
+          return;
+        }
+
+        toast("Error", {
+          description: "Something went wrong, please try again later",
+        });
+      } catch (error) {
+        console.log(error);
+        toast("Error", {
+          description: "Something went wrong, please try again later",
+        });
+      } finally {
+        setIsPending(false);
+      }
     }
   };
 

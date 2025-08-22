@@ -223,3 +223,7 @@ export const AIAnswerSchema = z.object({
     .string()
     .min(100, "Answer is required and must contain at least 100 characters"),
 });
+
+export const DeleteAnswerSchema = z.object({
+  answerId: z.string().min(1, "Answer ID is required"),
+});
