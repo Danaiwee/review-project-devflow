@@ -180,7 +180,6 @@ export const HOMEPAGE_FILTERS = [
   { name: "Newest", value: "newest" },
   { name: "Popular", value: "popular" },
   { name: "Unanswered", value: "unanswered" },
-  { name: "Recommended", value: "recommended" },
 ];
 
 export const ANSWER_FILTERS = [
@@ -208,6 +207,13 @@ export const USER_FILTERS = [
   { name: "Newest", value: "newest" },
   { name: "Oldest", value: "oldest" },
   { name: "Popular", value: "popular" },
+];
+
+export const GLOBAL_FILTERS = [
+  { name: "Question", value: "question" },
+  { name: "Answer", value: "answer" },
+  { name: "User", value: "user" },
+  { name: "Tag", value: "tag" },
 ];
 
 export const USERS: User[] = [

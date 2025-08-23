@@ -96,4 +96,10 @@ declare global {
     author: string | Author;
     question: Question;
   }
+
+  interface GlobalResultType {
+    title: string;
+    type: string;
+    id: string;
+  }
 }

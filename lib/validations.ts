@@ -247,3 +247,8 @@ export const CreateInteractionSchema = z.object({
 export const GetUserStatsSchema = z.object({
   userId: z.string().min(1, "User ID is required"),
 });
+
+export const GlobalSearchSchema = z.object({
+  query: z.string().min(1, "Global search is required"),
+  type: z.string().optional(),
+});

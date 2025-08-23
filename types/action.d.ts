@@ -159,4 +159,9 @@ declare global {
   interface GetUserStatsParams {
     userId: string;
   }
+
+  interface GlobalSearchParams {
+    query: string;
+    type?: string;
+  }
 }
