@@ -155,4 +155,8 @@ declare global {
     performerId: string;
     authorId: string;
   }
+
+  interface GetUserStatsParams {
+    userId: string;
+  }
 }

@@ -243,3 +243,7 @@ export const CreateInteractionSchema = z.object({
   targetType: z.enum(["question", "answer"]),
   authorId: z.string().min(1, "User ID is required"),
 });
+
+export const GetUserStatsSchema = z.object({
+  userId: z.string().min(1, "User ID is required"),
+});
