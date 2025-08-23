@@ -8,7 +8,6 @@ import handleError from "@/lib/handler/error";
 import { ValidationError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
 import { SignInWithOAuthSchema } from "@/lib/validations";
-import { APIErrorReponse } from "@/types/global";
 
 export async function POST(request: Request) {
   const body = await request.json();
