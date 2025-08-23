@@ -3,6 +3,7 @@ import React from "react";
 
 import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import Pagination from "@/components/data/Pagination";
 import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { TAG_FILTERS, TAGS } from "@/constants";
@@ -25,7 +26,7 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
     filter,
     query,
   });
-  const { tags } = data || {};
+  const { tags, isNext } = data || {};
 
   return (
     <>
@@ -63,6 +64,8 @@ const TagsPage = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+
+      <Pagination page={Number(page) || 1} isNext={isNext || false} />
     </>
   );
 };

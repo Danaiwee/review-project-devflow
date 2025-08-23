@@ -3,7 +3,8 @@ import React from "react";
 
 import UserCard from "@/components/cards/UserCard";
 import DataRenderer from "@/components/data/DataRenderer";
-import CommonFilter from "@/components/search/CommonFilter";  
+import Pagination from "@/components/data/Pagination";
+import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { USER_FILTERS } from "@/constants";
 import { EMPTY_USERS } from "@/constants/empty";
@@ -25,7 +26,7 @@ const CommunityPage = async ({ searchParams }: RouteParams) => {
     query,
     filter,
   });
-  const { users } = data || {};
+  const { users, isNext } = data || {};
 
   return (
     <>
@@ -58,6 +59,8 @@ const CommunityPage = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+
+      <Pagination page={Number(page) || 1} isNext={isNext || false} />
     </>
   );
 };

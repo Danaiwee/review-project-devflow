@@ -1,8 +1,10 @@
 import { Metadata } from "next";
 import React from "react";
+import { fa } from "zod/v4/locales";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import Pagination from "@/components/data/Pagination";
 import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { COLLECTION_FILTERS, QUESTIONS, TAGS } from "@/constants";
@@ -28,7 +30,7 @@ const TagPage = async ({ params, searchParams }: RouteParams) => {
     query,
   });
 
-  const { questions, tag } = data || {};
+  const { questions, tag, isNext } = data || {};
 
   return (
     <>
@@ -64,6 +66,8 @@ const TagPage = async ({ params, searchParams }: RouteParams) => {
           </div>
         )}
       />
+
+      <Pagination page={Number(page) || 1} isNext={isNext || false} />
     </>
   );
 };

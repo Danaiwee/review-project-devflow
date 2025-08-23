@@ -4,6 +4,7 @@ import React from "react";
 
 import JobCard from "@/components/cards/JobCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import Pagination from "@/components/data/Pagination";
 import JobFilter from "@/components/search/JobFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
 import { COUNTRIES } from "@/constants";
@@ -57,8 +58,10 @@ const JobsPage = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+
+      <Pagination page={Number(page) || 1} isNext={jobs?.length === 10} />
     </>
   );
 };
 
-export default JobsPage;
+export default JobsPage;  

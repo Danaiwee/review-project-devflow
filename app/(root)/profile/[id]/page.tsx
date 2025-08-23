@@ -9,6 +9,7 @@ import AnswerCard from "@/components/cards/AnswerCard";
 import QuestionCard from "@/components/cards/QuestionCard";
 import TagCard from "@/components/cards/TagCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import Pagination from "@/components/data/Pagination";
 import UserAvatar from "@/components/navigation/UserAvatar";
 import ProfileLink from "@/components/profile/ProfileLink";
 import Stats from "@/components/profile/Stats";
@@ -67,7 +68,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
   });
-  const { questions } = userQuestionsData || {};
+  const { questions, isNext: isNextQuestions } = userQuestionsData || {};
 
   const {
     success: userAnswersSuccess,
@@ -78,7 +79,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
   });
-  const { answers } = userAnswersData || {};
+  const { answers, isNext: isNextAnswers } = userAnswersData || {};
 
   const {
     success: userTopTagsSuccess,
@@ -185,6 +186,10 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
                 </div>
               )}
             />
+            <Pagination
+              page={Number(page) || 1}
+              isNext={isNextQuestions || false}
+            />
           </TabsContent>
 
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
@@ -206,6 +211,10 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
                   ))}
                 </div>
               )}
+            />
+            <Pagination
+              page={Number(page) || 1}
+              isNext={isNextAnswers || false}
             />
           </TabsContent>
         </Tabs>

@@ -83,14 +83,16 @@ const AnswerCard = async ({
         </div>
       </div>
 
-      <Preview content={content} />
+      <Preview
+        content={showReadMore ? `${content.slice(0, 270)}...` : content}
+      />
 
       {showReadMore && (
         <Link
           href={`/questions/${question}/#answer-${_id}`}
           className="body-medium relative z-10 font-space-grotesk text-primary-500"
         >
-          <p className="mt-1">Read more...</p>
+          <p className="mt-3">Read more...</p>
         </Link>
       )}
     </div>

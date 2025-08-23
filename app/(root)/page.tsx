@@ -4,6 +4,7 @@ import React from "react";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
+import Pagination from "@/components/data/Pagination";
 import CommonFilter from "@/components/search/CommonFilter";
 import HomeFilter from "@/components/search/HomeFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
@@ -28,7 +29,7 @@ const HomePage = async ({ searchParams }: RouteParams) => {
     query,
     filter,
   });
-  const { questions } = data || {};
+  const { questions, isNext } = data || {};
 
   return (
     <>
@@ -75,6 +76,8 @@ const HomePage = async ({ searchParams }: RouteParams) => {
           </div>
         )}
       />
+
+      <Pagination page={Number(page) || 1} isNext={isNext || false} />
     </>
   );
 };
