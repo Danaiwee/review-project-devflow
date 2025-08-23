@@ -227,3 +227,19 @@ export const AIAnswerSchema = z.object({
 export const DeleteAnswerSchema = z.object({
   answerId: z.string().min(1, "Answer ID is required"),
 });
+
+export const CreateInteractionSchema = z.object({
+  action: z.enum([
+    "view",
+    "upvote",
+    "downvote",
+    "bookmark",
+    "post",
+    "edit",
+    "delete",
+    "search",
+  ]),
+  targetId: z.string().min(1, "Target ID is required"),
+  targetType: z.enum(["question", "answer"]),
+  authorId: z.string().min(1, "User ID is required"),
+});
