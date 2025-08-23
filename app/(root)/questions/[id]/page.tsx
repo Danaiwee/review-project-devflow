@@ -19,11 +19,27 @@ import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "DevFlow | Question Details",
-  description:
-    "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
-};
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const { success, data } = await getQuestion({ questionId: id });
+  const { question } = data || {};
+  const { title, content } = question || {};
+
+  if (!success) {
+    return {
+      title: "DevFlow | Question Details",
+      description:
+        "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
+    };
+  }
+
+  return {
+    title: `DevFlow | ${question?.title}`,
+    description: `${question?.content.slice(0, 100)}`,
+  };
+}
 
 const QuestionPage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

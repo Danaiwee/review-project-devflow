@@ -25,11 +25,26 @@ import {
   getUserTopTags,
 } from "@/lib/actions/user.action";
 
-export const metadata: Metadata = {
-  title: "DevFlow | Profile",
-  description:
-    "View and manage your personal developer profile, including your questions, answers, collections, reputation, and activity within the community.",
-};
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const { success, data } = await getUser({ userId: id });
+  const { user } = data || {};
+
+  if (!success) {
+    return {
+      title: "DevFlow | Profile",
+      description:
+        "View and manage your personal developer profile, including your questions, answers, collections, reputation, and activity within the community.",
+    };
+  }
+
+  return {
+    title: `DevFlow | ${user?.name || "Profile"}`,
+    description: `${user?.bio || "View and manage your personal developer profile, including your questions, answers, collections, reputation, and activity within the community."} `,
+  };
+}
 
 const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

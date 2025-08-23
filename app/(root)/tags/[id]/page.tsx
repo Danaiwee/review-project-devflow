@@ -1,22 +1,36 @@
 import { Metadata } from "next";
 import React from "react";
-import { fa } from "zod/v4/locales";
 
 import QuestionCard from "@/components/cards/QuestionCard";
 import DataRenderer from "@/components/data/DataRenderer";
 import Pagination from "@/components/data/Pagination";
 import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { COLLECTION_FILTERS, QUESTIONS, TAGS } from "@/constants";
+import { COLLECTION_FILTERS } from "@/constants";
 import { EMPTY_QUESTION } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
 import { getTagQuestions } from "@/lib/actions/tag.action";
+import { getTechDescription } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "DevFlow | Tag",
-  description:
-    "Explore all questions, answers, and discussions related to the tag, and stay updated on trends and best practices.",
-};
+export async function generateMetadata({
+  params,
+}: RouteParams): Promise<Metadata> {
+  const { id } = await params;
+  const { success, data } = await getTagQuestions({ tagId: id });
+  const { tag } = data || {};
+  if (!success) {
+    return {
+      title: "DevFlow | Tag",
+      description:
+        "Explore all questions, answers, and discussions related to the tag, and stay updated on trends and best practices.",
+    };
+  }
+
+  return {
+    title: `DevFlow | ${tag?.name}`,
+    description: `${getTechDescription(tag?.name || "")}`,
+  };
+}
 
 const TagPage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;

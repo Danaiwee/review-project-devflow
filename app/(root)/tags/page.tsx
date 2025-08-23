@@ -6,7 +6,7 @@ import DataRenderer from "@/components/data/DataRenderer";
 import Pagination from "@/components/data/Pagination";
 import CommonFilter from "@/components/search/CommonFilter";
 import LocalSearchbar from "@/components/search/LocalSearhbar";
-import { TAG_FILTERS, TAGS } from "@/constants";
+import { TAG_FILTERS } from "@/constants";
 import { EMPTY_TAGS } from "@/constants/empty";
 import { ROUTES } from "@/constants/routes";
 import { getTags } from "@/lib/actions/tag.action";

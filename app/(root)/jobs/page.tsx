@@ -64,4 +64,4 @@ const JobsPage = async ({ searchParams }: RouteParams) => {
   );
 };
 
-export default JobsPage;  
+export default JobsPage;
