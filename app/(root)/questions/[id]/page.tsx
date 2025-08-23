@@ -54,7 +54,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
     targetId: _id,
     targetType: "question",
   });
-  const { hasUpvoted, hasDownvoted } = data!;
+  const { hasUpvoted, hasDownvoted } = data || {};
 
   const hasSavedQuestionPromise = hasSavedQuestion({
     questionId: _id,
@@ -90,8 +90,8 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
                 upvotes={question.upvotes}
                 downvotes={question.downvotes}
                 targetId={_id}
-                hasUpvoted={hasUpvoted}
-                hasDownvoted={hasDownvoted}
+                hasUpvoted={hasUpvoted || false}
+                hasDownvoted={hasDownvoted || false}
               />
             </Suspense>
 

@@ -44,7 +44,10 @@ const SignUpForm = ({ defaultValues }: SignUpFormProps) => {
         });
 
         router.push(ROUTES.HOME);
+        return;
       }
+
+      toast("Invalid credentials", { description: result.error?.message });
     } catch (error) {
       console.log(error);
       toast("Error", {
@@ -90,10 +93,10 @@ const SignUpForm = ({ defaultValues }: SignUpFormProps) => {
           {form.formState.isSubmitting ? (
             <>
               <Loader2 className="size-4 animate-spin" />
-              Signing in...
+              Signing up...
             </>
           ) : (
-            "Sign In"
+            "Sign up"
           )}
         </Button>
 

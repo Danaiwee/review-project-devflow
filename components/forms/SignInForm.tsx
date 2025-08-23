@@ -44,7 +44,11 @@ const SignInForm = ({ defaultValues }: SignInFormProps) => {
         });
 
         router.push(ROUTES.HOME);
+
+        return;
       }
+
+      toast("Error", { description: "Please check your email or password" });
     } catch (error) {
       console.log(error);
       toast("Error", {

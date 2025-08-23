@@ -44,6 +44,47 @@ export const SIDEBAR_LINKS = [
   },
 ];
 
+export const HOMEPAGE_FILTERS = [
+  { name: "Newest", value: "newest" },
+  { name: "Popular", value: "popular" },
+  { name: "Most Viewed", value: "mostviewed" },
+  { name: "Unanswered", value: "unanswered" },
+];
+
+export const ANSWER_FILTERS = [
+  { name: "Newest", value: "newest" },
+  { name: "Oldest", value: "oldest" },
+  { name: "Popular", value: "popular" },
+];
+
+export const COLLECTION_FILTERS = [
+  { name: "Oldest", value: "oldest" },
+  { name: "Most Voted", value: "mostvoted" },
+  { name: "Most Viewed", value: "mostviewed" },
+  { name: "Most Recent", value: "mostrecent" },
+  { name: "Most Answered", value: "mostanswered" },
+];
+
+export const TAG_FILTERS = [
+  { name: "A-Z", value: "name" },
+  { name: "Recent", value: "recent" },
+  { name: "Oldest", value: "oldest" },
+  { name: "Popular", value: "popular" },
+];
+
+export const USER_FILTERS = [
+  { name: "Newest", value: "newest" },
+  { name: "Oldest", value: "oldest" },
+  { name: "Popular", value: "popular" },
+];
+
+export const GLOBAL_FILTERS = [
+  { name: "Question", value: "question" },
+  { name: "Answer", value: "answer" },
+  { name: "User", value: "user" },
+  { name: "Tag", value: "tag" },
+];
+
 export const QUESTIONS: Question[] = [
   {
     _id: "q1",
@@ -174,46 +215,6 @@ export const TAGS: Tag[] = [
     name: "graphql",
     questions: 500,
   },
-];
-
-export const HOMEPAGE_FILTERS = [
-  { name: "Newest", value: "newest" },
-  { name: "Popular", value: "popular" },
-  { name: "Unanswered", value: "unanswered" },
-];
-
-export const ANSWER_FILTERS = [
-  { name: "Newest", value: "newest" },
-  { name: "Oldest", value: "oldest" },
-  { name: "Popular", value: "popular" },
-];
-
-export const COLLECTION_FILTERS = [
-  { name: "Oldest", value: "oldest" },
-  { name: "Most Voted", value: "mostvoted" },
-  { name: "Most Viewed", value: "mostviewed" },
-  { name: "Most Recent", value: "mostrecent" },
-  { name: "Most Answered", value: "mostanswered" },
-];
-
-export const TAG_FILTERS = [
-  { name: "A-Z", value: "name" },
-  { name: "Recent", value: "recent" },
-  { name: "Oldest", value: "oldest" },
-  { name: "Popular", value: "popular" },
-];
-
-export const USER_FILTERS = [
-  { name: "Newest", value: "newest" },
-  { name: "Oldest", value: "oldest" },
-  { name: "Popular", value: "popular" },
-];
-
-export const GLOBAL_FILTERS = [
-  { name: "Question", value: "question" },
-  { name: "Answer", value: "answer" },
-  { name: "User", value: "user" },
-  { name: "Tag", value: "tag" },
 ];
 
 export const USERS: User[] = [
@@ -619,34 +620,6 @@ export const COUNTRIES: Country[] = [
   { name: "Zimbabwe", value: "ZW" },
 ];
 
-export const BADGE_CRITERIA = {
-  QUESTION_COUNT: {
-    BRONZE: 10,
-    SILVER: 50,
-    GOLD: 100,
-  },
-  ANSWER_COUNT: {
-    BRONZE: 10,
-    SILVER: 50,
-    GOLD: 100,
-  },
-  QUESTION_UPVOTES: {
-    BRONZE: 10,
-    SILVER: 50,
-    GOLD: 100,
-  },
-  ANSWER_UPVOTES: {
-    BRONZE: 10,
-    SILVER: 50,
-    GOLD: 100,
-  },
-  TOTAL_VIEWS: {
-    BRONZE: 1000,
-    SILVER: 10000,
-    GOLD: 100000,
-  },
-};
-
 export const ANSWERS: Answer[] = [
   {
     _id: "ans1",
@@ -720,3 +693,31 @@ export const ANSWERS: Answer[] = [
     createdAt: new Date("2025-08-05T11:55:00Z"),
   },
 ];
+
+export const BADGE_CRITERIA = {
+  QUESTION_COUNT: {
+    BRONZE: 10,
+    SILVER: 50,
+    GOLD: 100,
+  },
+  ANSWER_COUNT: {
+    BRONZE: 10,
+    SILVER: 50,
+    GOLD: 100,
+  },
+  QUESTION_UPVOTES: {
+    BRONZE: 10,
+    SILVER: 50,
+    GOLD: 100,
+  },
+  ANSWER_UPVOTES: {
+    BRONZE: 10,
+    SILVER: 50,
+    GOLD: 100,
+  },
+  TOTAL_VIEWS: {
+    BRONZE: 1000,
+    SILVER: 10000,
+    GOLD: 100000,
+  },
+};
