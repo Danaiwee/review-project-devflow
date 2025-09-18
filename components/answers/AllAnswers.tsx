@@ -3,6 +3,7 @@ import { EMPTY_ANSWERS } from "@/constants/empty";
 
 import AnswerCard from "../cards/AnswerCard";
 import DataRenderer from "../data/DataRenderer";
+import Pagination from "../data/Pagination";
 import CommonFilter from "../search/CommonFilter";
 
 interface AllAnswersProps extends ActionResponse<Answer[]> {
@@ -44,6 +45,8 @@ const AllAnswers = ({
           ))
         }
       />
+
+      <Pagination page={Number(page) || 1} isNext={isNext || false} />
     </div>
   );
 };

@@ -210,20 +210,35 @@ export async function getUserTopTags(
 
   try {
     const pipeline: PipelineStage[] = [
-      { $match: { author: new mongoose.Types.ObjectId(userId) } },
+      //Keeps only the questions authored by the given userId
+      { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
+
+      //Separated data for each tag
       { $unwind: "$tags" },
+
+      //group by tag id and count the amount of that tag
       { $group: { _id: "$tags", count: { $sum: 1 } } },
+
+      //find the tag detail with tag collection and show it in "tagInfo" key (this "tagInfo will be array")
       {
         $lookup: {
           from: "tags",
           localField: "_id",
           foreignField: "_id",
-          as: "tagInfo",
+          as: "tagInfo",// this field will be array
         },
       },
+
+      //Remove the array from tagInfo
       { $unwind: "$tagInfo" },
+
+      //Sort by count (the most count will be the first one)
       { $sort: { count: -1 } },
+
+      //Keep only first 10 data
       { $limit: 10 },
+
+      //Keeps only tagId, name, and count.
       {
         $project: {
           _id: "$tagInfo._id",
@@ -320,10 +335,10 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
 
   try {
     const [questionStats] = await Question.aggregate([
-      { $match: { author: new Types.ObjectId(userId) } },
+      { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
       {
         $group: {
-          _id: null,
+          _id: null, //don’t group by any field
           count: { $sum: 1 },
           upvotes: { $sum: "$upvotes" },
           views: { $sum: "$views" },
@@ -332,7 +347,7 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
     ]);
 
     const [answerStats] = await Answer.aggregate([
-      { $match: { author: new Types.ObjectId(userId) } },
+      { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
       {
         $group: {
           _id: null,
@@ -344,7 +359,7 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
 
     const badges = assignBadges({
       criteria: [
-        { type: "ANSWER_COUNT", count: answerStats.count },
+        { type: "ANSWER_COUNT", count: answerStats.count }, //eg. 100
         { type: "QUESTION_COUNT", count: questionStats.count },
         {
           type: "QUESTION_UPVOTES",
@@ -366,3 +381,111 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
     return handleError(error) as ErrorResponse;
   }
 }
+
+
+//Example for pipeline getUserTopTags function
+/*
+  1. step 1: filter data 
+    syntax:  { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
+    example output: 
+    [
+      {
+        "_id": "q1",
+        "title": "What is JS?",
+        "tags": ["t1", "t2"],
+        "author": "user123"
+      },
+      {
+        "_id": "q2",
+        "title": "What is TS?",
+        "tags": ["t2", "t3"],
+        "author": "user123"
+      }
+    ]
+
+  2. step 2: Splits array of tags into separate documents.
+    syntax: { $unwind: "$tags" }
+    example output:
+    [
+      { "_id": "q1", "tags": "t1", "author": "user123" },
+      { "_id": "q1", "tags": "t2", "author": "user123" },
+      { "_id": "q2", "tags": "t2", "author": "user123" },
+      { "_id": "q2", "tags": "t3", "author": "user123" }
+    ]
+
+  3. step 3: Groups by tag id, counts occurrences.
+    syntax: { $group: { _id: "$tags", count: { $sum: 1 } } }
+    example output: 
+    [
+      { "_id": "t1", "count": 1 },
+      { "_id": "t2", "count": 2 },
+      { "_id": "t3", "count": 1 }
+    ]
+
+  4. step: 4 Join with tags collection.
+    syntax: 
+    {
+      $lookup: {
+        from: "tags",
+        localField: "_id",
+        foreignField: "_id",
+        as: "tagInfo"
+      }
+    }
+    
+    example output: 
+    [
+      {
+        "_id": "t1",
+        "count": 1,
+        "tagInfo": [{ "_id": "t1", "name": "javascript", "questions": 10 }]
+      },
+      {
+        "_id": "t2",
+        "count": 2,
+        "tagInfo": [{ "_id": "t2", "name": "typescript", "questions": 5 }]
+      },
+      {
+        "_id": "t3",
+        "count": 1,
+        "tagInfo": [{ "_id": "t3", "name": "mongodb", "questions": 7 }]
+      }
+    ]
+
+  5. step 5: Flatten the tagInfo array.
+      syntax: {$unwind: "$tagInfo"}
+      example output: 
+      [
+        { "_id": "t1", "count": 1, "tagInfo": { "_id": "t1", "name": "javascript", "questions": 10 } },
+        { "_id": "t2", "count": 2, "tagInfo": { "_id": "t2", "name": "typescript", "questions": 5 } },
+        { "_id": "t3", "count": 1, "tagInfo": { "_id": "t3", "name": "mongodb", "questions": 7 } }
+      ]
+
+  6. step 6: sort value by count
+    syntax: { $sort: { count: -1 } },
+    example output: 
+    [
+      { "_id": "t2", "count": 2, "tagInfo": { "_id": "t2", "name": "typescript", "questions": 5 } },
+      { "_id": "t1", "count": 1, "tagInfo": { "_id": "t1", "name": "javascript", "questions": 10 } },
+      { "_id": "t3", "count": 1, "tagInfo": { "_id": "t3", "name": "mongodb", "questions": 7 } }
+    ]
+
+  7. step 7: Keep only the top 10. (Here we only have 3.)
+    syntax: { $limit: 10 }, 
+
+  8. step 8: form the return data
+    syntax: 
+    {
+      _id: "$tagInfo._id",
+      name: "$tagInfo.name",
+      count: 1
+    }
+    example output: 
+    [
+  { "_id": "t2", "name": "typescript", "count": 2 },
+  { "_id": "t1", "name": "javascript", "count": 1 },
+  { "_id": "t3", "name": "mongodb", "count": 1 }
+]
+
+*/
+

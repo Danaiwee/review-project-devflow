@@ -37,7 +37,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           if (isValidPassword) {
             //This return stored in user object
-            console.log("6");
             return {
               id: existingUser.id,
               name: existingUser.name,
@@ -47,7 +46,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
         }
 
-        return null;
+        return null; //login fails
       },
     }),
   ],
@@ -102,3 +101,62 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
 });
+
+//Example object
+/*user object example
+{
+  "id": "123456789012345678901",
+  "name": "Danai Weerayutwattana",
+  "email": "danai@example.com",
+  "image": "https://lh3.googleusercontent.com/a/AA12345"
+}
+*/
+
+/*profile object example
+  {
+  "sub": "123456789012345678901",
+  "name": "Danai Weerayutwattana",
+  "given_name": "Danai",
+  "family_name": "Weerayutwattana",
+  "email": "danai@example.com",
+  "email_verified": true,
+  "picture": "https://lh3.googleusercontent.com/a/AA12345",
+  "locale": "en"
+  }
+*/
+
+/*account object example
+  {
+  "provider": "google",
+  "type": "oauth",
+  "providerAccountId": "123456789012345678901",
+  "access_token": "ya29.a0AfH6SM...",
+  "token_type": "Bearer",
+  "scope": "openid https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
+  "id_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6..."
+  }
+*/
+
+/*token object example
+  {
+  name: "Danai Weerayutwattana",   // from user.name
+  email: "danai@example.com",      // from user.email
+  picture: "https://avatars.githubusercontent.com/u/12345?v=4", // user.image
+  sub: "64f82a6d9c4d1d001234abcd", // MongoDB _id of the user, set in jwt callback
+  iat: 1693550000,                 // issued-at timestamp
+  exp: 1694154800,                 // expiration timestamp (based on session maxAge)
+  jti: "randomJWTId123"            // JWT unique ID
+  }
+*/
+
+/*session object
+  {
+  user: {
+    id: "64f82a6d9c4d1d001234abcd",   // MongoDB user _id from token.sub
+    name: "Danai Weerayutwattana",    // from OAuth provider
+    email: "danai@example.com",       // from OAuth provider
+    image: "https://avatars.githubusercontent.com/u/12345?v=4" // from OAuth provider
+  },
+  expires: "2025-09-30T12:34:56.789Z" // session expiration timestamp
+}
+*/

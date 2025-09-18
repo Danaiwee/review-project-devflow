@@ -59,17 +59,17 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
     data: userData,
     error: userError,
   } = await getUser({ userId: id });
-  const { user } = userData!;
 
-  if (!userSuccess)
+  if (!userSuccess || userError)
     return (
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="h1-bold text-dark100_light900">User not found</h1>
         <p className="paragraph-regular text-dark200_light800 max-w-md">
-          {userError?.message}
+          Sorry!!! This user may not exist in our community
         </p>
       </div>
     );
+  const { user } = userData!;
 
   const { data: userStatsData } = await getUserStats({ userId: id });
   const { totalAnswers, totalQuestions, badges } = userStatsData || {};

@@ -40,6 +40,7 @@ const accountSchema = new Schema<IAccount>(
   { timestamps: true }
 );
 
+//models are globally cached by mongoose and stored in mongoose global object >>> we can access it by mongoose.models too
 const Account = models?.Account || model<IAccount>("Account", accountSchema);
 
 export default Account;

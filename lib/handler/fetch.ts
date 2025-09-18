@@ -1,4 +1,3 @@
-import { ActionResponse } from "@/types/global";
 
 import { RequestError } from "../http-errors";
 import logger from "../logger";
@@ -59,3 +58,23 @@ export async function fetchHandler<T>(
     return handleError(error) as ActionResponse<T>;
   }
 }
+
+
+//Example of type RequestInit
+/*
+  interface RequestInit {
+  method?: string;                       // e.g., "GET", "POST"
+  headers?: HeadersInit;                 // headers object or array
+  body?: BodyInit | null;                // request body (string, FormData, Blob, etc.)
+  referrer?: string;                     // e.g., "about:client"
+  referrerPolicy?: ReferrerPolicy;       // e.g., "no-referrer", "origin"
+  mode?: RequestMode;                    // "cors" | "no-cors" | "same-origin"
+  credentials?: RequestCredentials;      // "omit" | "same-origin" | "include"
+  cache?: RequestCache;                  // e.g., "default", "reload", "force-cache"
+  redirect?: RequestRedirect;            // "follow" | "error" | "manual"
+  integrity?: string;                    // Subresource Integrity
+  keepalive?: boolean;                   // keep request alive after page unload
+  signal?: AbortSignal | null;           // for aborting requests
+  window?: any;                          // (non-standard, usually null)
+}
+*/

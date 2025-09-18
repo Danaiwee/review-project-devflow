@@ -100,16 +100,14 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
           </div>
 
           <div className="flex items-center justify-end gap-4">
-            <Suspense fallback={<Loader2 className="size-3 animate-spin" />}>
-              <Votes
-                targetType="question"
-                upvotes={question.upvotes}
-                downvotes={question.downvotes}
-                targetId={_id}
-                hasUpvoted={hasUpvoted || false}
-                hasDownvoted={hasDownvoted || false}
-              />
-            </Suspense>
+            <Votes
+              targetType="question"
+              upvotes={question.upvotes}
+              downvotes={question.downvotes}
+              targetId={_id}
+              hasUpvoted={hasUpvoted || false}
+              hasDownvoted={hasDownvoted || false}
+            />
 
             <Suspense fallback={<Loader2 className="size-3 animate-spin" />}>
               <SaveQuestion

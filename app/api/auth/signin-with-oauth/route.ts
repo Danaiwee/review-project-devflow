@@ -27,9 +27,9 @@ export async function POST(request: Request) {
 
     const slugifiedUsername = slugify(username, {
       lower: true,
-      strict: true,
+      strict: true,// remove all special character and replace spage with "-"
       trim: true,
-    });
+    });// John Doe >> john-doe
 
     let existingUser = await User.findOne({ email }).session(session);
 

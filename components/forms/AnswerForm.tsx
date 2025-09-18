@@ -50,6 +50,13 @@ const AnswerForm = ({
 
   const handleCreateAnswer = (data: z.infer<typeof AnswerSchema>) => {
     startAnsweringTransition(async () => {
+      if (session.status !== "authenticated") {
+        toast("Error", {
+          description: "Please log in to submit your answer",
+        });
+        return;
+      }
+
       const result = await createAnswer({
         content: data.content,
         questionId,
@@ -80,7 +87,7 @@ const AnswerForm = ({
     const userAnswer = editorRef.current?.getMarkdown() || "";
 
     try {
-      const { success, data, error } = await api.ai.AIAnswer({
+      const { success, data } = await api.ai.AIAnswer({
         questionTitle,
         questionContent,
         userAnswer,
@@ -88,11 +95,12 @@ const AnswerForm = ({
 
       if (!success) {
         return toast("Error", {
-          description: error?.message || "Failed to generate AI answer",
+          description: "Sorry, AI help only improve your answer.",
         });
       }
 
-      const formattedAnswer = data.replace(/<br>/g, " ").toString().trim();
+      const formattedAnswer =
+        typeof data === "string" ? data.replace(/<br>/g, " ").trim() : "";
 
       if (editorRef.current) {
         editorRef.current.setMarkdown(formattedAnswer);

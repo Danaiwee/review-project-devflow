@@ -17,6 +17,7 @@ interface NavLinksProps {
 
 const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
   const pathname = usePathname();
+  
 
   return (
     <>

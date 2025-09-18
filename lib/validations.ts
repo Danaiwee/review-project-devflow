@@ -1,4 +1,4 @@
-import z, { string } from "zod";
+import z from "zod";
 
 export const SignInSchema = z.object({
   email: z
@@ -29,8 +29,8 @@ export const SignUpSchema = z.object({
 
   email: z
     .string()
-    .min(1, { message: "Email is required." })
-    .email({ message: "Please provide a valid email address." }),
+    .email({ message: "Please provide a valid email address." })
+    .min(1, { message: "Email is required." }),
 
   password: z
     .string()
@@ -66,7 +66,7 @@ export const AskQuestionSchema = z.object({
     .max(150, { message: "Title cannot exceed 150 characters" }),
   content: z
     .string()
-    .min(100, { message: "Content must contain al least 100 characters" }),
+    .min(100, { message: "Content must contain at least 100 characters" }),
   tags: z
     .array(
       z

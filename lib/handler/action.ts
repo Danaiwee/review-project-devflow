@@ -8,11 +8,7 @@ import { auth } from "@/auth";
 import { UnauthorizedError, ValidationError } from "../http-errors";
 import dbConnect from "../mongoose";
 
-interface ActionOptions<T> {
-  params?: T;
-  schema?: ZodSchema<T>;
-  authorize?: boolean;
-}
+ 
 
 async function action<T>({
   params,

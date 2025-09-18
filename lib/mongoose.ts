@@ -47,3 +47,8 @@ const dbConnect = async (): Promise<Mongoose> => {
 };
 
 export default dbConnect;
+
+//After connecting, this is how cached.conn looklike
+/*
+  
+*/

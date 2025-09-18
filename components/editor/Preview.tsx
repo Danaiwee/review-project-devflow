@@ -8,13 +8,13 @@ Code.theme = {
 };
 
 const Preview = ({ content }: { content: string }) => {
-  const formattedContent = content.replace(/\\/g, "").replace(/&#x20;/g, "");
+  const formattedContent = content.replace(/\\/g, "").replace(/&#x20;/g, ""); //replace the \\ and space with ""
   return (
     <section className="markdown prose grid break-words">
       <MDXRemote
         source={formattedContent}
         components={{
-          pre: (props) => (
+          pre: (props) => ( //modify the pre tag
             <Code
               {...props}
               lineNumbers

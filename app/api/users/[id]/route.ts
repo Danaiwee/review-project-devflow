@@ -6,7 +6,6 @@ import handleError from "@/lib/handler/error";
 import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import dbConnect from "@/lib/mongoose";
 import { UserSchema } from "@/lib/validations";
-import { APIErrorReponse } from "@/types/global";
 
 export async function GET(
   _: Request,

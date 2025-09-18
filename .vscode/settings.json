@@ -1,19 +1,19 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode", //Set Prettier as a default code formatter.
+  "editor.formatOnSave": true,//Automatically format when we save the file.
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit",
-    "source.addMissingImports": "explicit"
+    "source.fixAll.eslint": "explicit", //Fixes all ESlint error on save.
+    "source.addMissingImports": "explicit"//Automatically adds missing imports when saving eg. date.toLocalString() >> date.toLocaleString()
   },
-  "prettier.tabWidth": 2,
-  "prettier.useTabs": false,
-  "prettier.semi": true,
-  "prettier.singleQuote": false,
-  "prettier.jsxSingleQuote": false,
-  "prettier.trailingComma": "es5",
-  "prettier.arrowParens": "always",
+  "prettier.tabWidth": 2, //Sets indentation to 2 spaces per tab.
+  "prettier.useTabs": false, //Uses spaces instead of tabs for indentation.
+  "prettier.semi": true, //Adds semicolons at the end of statements.
+  "prettier.singleQuote": false, //Uses double quotes for strings in JavaScript/TypeScript.
+  "prettier.jsxSingleQuote": false, //Uses double quotes in JSX attributes instead of single quotes.
+  "prettier.trailingComma": "es5", //Adds trailing commas where valid in ES5 (objects, arrays, etc.), but not in function eg. [1, 2,]
+  "prettier.arrowParens": "always", //Always include parentheses around arrow function arguments, even if there’s only one. eg. const square = (x) => x * x;
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"//Ensures that Prettier is the default formatter for TypeScript, TSX, and JSX files.
   },
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -24,5 +24,5 @@
   "[javascriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib" //Points VSCode to use the TypeScript version installed
 }

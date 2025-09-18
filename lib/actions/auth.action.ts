@@ -30,12 +30,12 @@ export async function signUpWithCredentials(
     const { username, name, email, password } = validationResult.params!;
 
     const isExistingUserEmail = await User.findOne({ email }).session(session);
-    if (isExistingUserEmail) throw new Error("User already exists");
+    if (isExistingUserEmail) throw new Error("Email already exists");
 
     const isExistingUserUsername = await User.findOne({ username }).session(
       session
     );
-    if (isExistingUserUsername) throw new Error("User already exists");
+    if (isExistingUserUsername) throw new Error("Username already exists");
 
     const [newUser] = await User.create(
       [
@@ -79,7 +79,7 @@ export async function signUpWithCredentials(
 
 export async function signInWithCredentials(
   params: SignInWithCredentailsParams
-) {
+): Promise<ActionResponse> {
   const validationResult = await action({
     params,
     schema: SignInSchema,

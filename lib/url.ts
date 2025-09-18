@@ -12,7 +12,7 @@ interface removeKeyFromUrlQueryParams {
 }
 
 export const formUrlQuery = ({ params, key, value }: formUrlQueryParams) => {
-  const queryString = qs.parse(params);
+  const queryString = qs.parse(params); //=> '?foo=bar' >> {foo: 'bar'}
 
   queryString[key] = value;
 

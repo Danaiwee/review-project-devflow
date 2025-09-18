@@ -162,7 +162,7 @@ export async function getQuestions(
         break;
     }
 
-    const totalQuestions = await Question.countDocuments(filterQuery);
+    const totalQuestions = await Question.countDocuments(filterQuery); //100
 
     const questions = await Question.find(filterQuery)
       .populate("tags", "name")
@@ -274,13 +274,13 @@ export async function editQuestion(
       await question.save({ session });
     }
 
-    const lowerTagNames = tags.map((tag) => tag.toLowerCase());
+    const lowerTagNames = tags.map((tag: string) => tag.toLowerCase());
     const existingTagNames = question.tags.map((tag: ITagDoc) =>
       tag.name.toLowerCase()
     );
 
     const tagsToAdd = tags.filter(
-      (tag) => !existingTagNames.includes(tag.toLowerCase())
+      (tag: string) => !existingTagNames.includes(tag.toLowerCase())
     );
     const tagsToRemove = question.tags.filter(
       (tag: ITagDoc) => !lowerTagNames.includes(tag.name.toLowerCase())
@@ -321,7 +321,7 @@ export async function editQuestion(
 
       const tagIdsToRemoveSet = new Set(
         tagIdsToRemove.map((id: mongoose.Types.ObjectId) => id.toString())
-      );
+      );// remove the duplicate and turn array to be object
 
       question.tags = question.tags.filter(
         (tag: mongoose.Types.ObjectId) => !tagIdsToRemoveSet.has(tag.toString())

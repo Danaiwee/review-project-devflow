@@ -52,16 +52,18 @@ const Editor = ({ value, editorRef, fieldChange }: EditorProps) => {
       onChange={fieldChange}
       className="background-light800_dark200 light-border-2 markdown-editor dark-editor grid w-full border rounded-md"
       plugins={[
-        headingsPlugin(),
-        listsPlugin(),
-        linkPlugin(),
-        linkDialogPlugin(),
-        quotePlugin(),
-        markdownShortcutPlugin(),
-        tablePlugin(),
-        imagePlugin(),
-        codeBlockPlugin({ defaultCodeBlockLanguage: "" }),
+        headingsPlugin(), //supports # H1, ## H2, etc.
+        listsPlugin(), //supports bulleted/numbered lists.
+        linkPlugin(), //add links.
+        linkDialogPlugin(), //add links.
+        quotePlugin(), //blockquotes.
+        markdownShortcutPlugin(), //keyboard shortcuts like Cmd+B.
+        tablePlugin(), //insert tables.
+        imagePlugin(), //insert images.
+        codeBlockPlugin({ defaultCodeBlockLanguage: "" }), //adds support for fenced code blocks in Markdown.
+        //uses CodeMirror editor inside the code blocks.
         codeMirrorPlugin({
+          //maps language identifiers for syntax highlighting.
           codeBlockLanguages: {
             css: "css",
             txt: "txt",
@@ -77,17 +79,20 @@ const Editor = ({ value, editorRef, fieldChange }: EditorProps) => {
             tsx: "TypeScript (React)",
             jsx: "JavaScript (React)",
           },
-          autoLoadLanguageSupport: true,
-          codeMirrorExtensions: themeExtension,
+          autoLoadLanguageSupport: true, //dynamically loads language syntax support.
+          codeMirrorExtensions: themeExtension, //adds the dark theme extension conditionally.
         }),
+        //Adds diff view support to compare changes in markdown.
         diffSourcePlugin({ viewMode: "rich-text", diffMarkdown: "" }),
+
+        //renders a toolbar.
         toolbarPlugin({
           toolbarContents: () => (
             <ConditionalContents
               options={[
                 {
                   when: (editor) => editor?.editorType === "codeblock",
-                  contents: () => <ChangeCodeMirrorLanguage />,
+                  contents: () => <ChangeCodeMirrorLanguage />, //select bar to change the language
                 },
                 {
                   fallback: () => (

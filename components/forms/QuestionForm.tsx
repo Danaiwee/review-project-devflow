@@ -37,7 +37,7 @@ interface QuestionFormProps {
 const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
   const router = useRouter();
   const editorRef = useRef<MDXEditorMethods>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition(); //marked as non-urgent
 
   const form = useForm<z.infer<typeof AskQuestionSchema>>({
     resolver: zodResolver(AskQuestionSchema),
@@ -48,11 +48,10 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
     },
   });
 
-  const handleInputKeyDown = (
+  const handleInputKeyDown = (  
     e: React.KeyboardEvent<HTMLInputElement>,
     field: { value: string[] }
   ) => {
-    console.log(e, field);
     if (e.key === "Enter") {
       e.preventDefault();
       const tagInput = e.currentTarget.value.trim();
@@ -64,7 +63,7 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
       } else if (tagInput.length > 20) {
         form.setError("tags", {
           type: "manual",
-          message: "Tag should be less than 15 characters",
+          message: "Tag should be less than 20 characters",
         });
       } else if (field.value.includes(tagInput)) {
         form.setError("tags", {
@@ -248,3 +247,14 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
 };
 
 export default QuestionForm;
+
+//Example of field object of title
+/*
+field = {
+  name: "title",
+  value: "Why is my React useEffect running twice?", // whatever is in the input
+  onChange: ƒ (event) {},  // updates value in form state
+  onBlur: ƒ () {},         // marks "touched"
+  ref: ƒ () {},            // forwards ref to Input
+}
+*/

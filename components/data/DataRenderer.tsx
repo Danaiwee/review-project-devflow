@@ -55,7 +55,7 @@ const DataRenderer = <T,>({
         title={DEFAULT_ERROR.title || error?.message || ""}
         message={
           error?.details
-            ? JSON.stringify(error.details, null, 2)
+            ? JSON.stringify(error.details, null, 2) //(value, replacer?, space?)
             : DEFAULT_ERROR.message
         }
         button={empty.button}

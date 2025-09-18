@@ -33,7 +33,7 @@ const AnswerCard = async ({
     targetId: _id,
     targetType: "answer",
   });
-  const { hasDownvoted, hasUpvoted } = data!;
+  const { hasDownvoted, hasUpvoted } = data || {};
 
   const showActionBtns = author?._id?.toString() === userId;
 
@@ -67,16 +67,15 @@ const AnswerCard = async ({
         </div>
 
         <div className="flex justify-end gap-3">
-          <Suspense fallback={<div>Loading...</div>}>
-            <Votes
-              targetType="answer"
-              targetId={_id}
-              upvotes={upvotes}
-              downvotes={downvotes}
-              hasUpvoted={hasUpvoted}
-              hasDownvoted={hasDownvoted}
-            />
-          </Suspense>
+          <Votes
+            targetType="answer"
+            targetId={_id}
+            upvotes={upvotes}
+            downvotes={downvotes}
+            hasUpvoted={hasUpvoted}
+            hasDownvoted={hasDownvoted}
+          />
+
           {showEdit && showActionBtns && (
             <EditDeleteAction type="Answer" itemId={_id} />
           )}

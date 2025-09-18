@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
 
-import AuthForm from "@/components/forms/SignInForm";
+import SignInForm from "@/components/forms/SignInForm";
 
 export const metadata: Metadata = {
   title: "DevFlow | Sign in",
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const SignInPage = () => {
-  return <AuthForm defaultValues={{ email: "", password: "" }} />;
+  return <SignInForm defaultValues={{ email: "", password: "" }} />;
 };
 
 export default SignInPage;

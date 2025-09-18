@@ -11,8 +11,8 @@ interface VotesProps {
   downvotes: number;
   targetId: string;
   targetType: "question" | "answer";
-  hasUpvoted: boolean;
-  hasDownvoted: boolean;
+  hasUpvoted?: boolean;
+  hasDownvoted?: boolean;
 }
 
 const Votes = ({
@@ -23,10 +23,15 @@ const Votes = ({
   targetId,
   targetType,
 }: VotesProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDownvoting, setIsDownvoting] = useState(false);
+  const [isUpvoting, setIsUpvoting] = useState(false);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
-    setIsLoading(false);
+    if (voteType === "upvote") {
+      setIsUpvoting(true);
+    } else {
+      setIsDownvoting(true);
+    }
     try {
       const result = await createVote({
         targetId,
@@ -50,7 +55,8 @@ const Votes = ({
       console.log(error);
       toast("Error", { description: `Failed to ${voteType} ${targetType}` });
     } finally {
-      setIsLoading(false);
+      setIsUpvoting(false);
+      setIsDownvoting(false);
     }
   };
 
@@ -62,7 +68,7 @@ const Votes = ({
           width={18}
           height={18}
           alt="upvote"
-          className={`cursor-pointer ${isLoading && "opacity-50"}`}
+          className={`cursor-pointer ${isUpvoting && "opacity-50"}`}
           aria-label="Upvote"
           onClick={() => handleVote("upvote")}
         />
@@ -80,7 +86,7 @@ const Votes = ({
           width={18}
           height={18}
           alt="downvote"
-          className={`cursor-pointer ${isLoading && "opacity-50"}`}
+          className={`cursor-pointer ${isDownvoting && "opacity-50"}`}
           aria-label="Downvote"
           onClick={() => handleVote("downvote")}
         />

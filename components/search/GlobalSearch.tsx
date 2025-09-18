@@ -22,8 +22,9 @@ const GlobalSearch = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      //If container is exist and when we click outside the container setIsOpen
+      
       if (
+        //If container is exist and when we click outside the container setIsOpen(false)
         searchContainerRef.current &&
         // @ts-expect-error Property 'contains' does not exist on type 'EventTarget | null'.
         !searchContainerRef.current.contains(event.target)
@@ -36,7 +37,7 @@ const GlobalSearch = () => {
     document.addEventListener("click", handleClickOutside);
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("click", handleClickOutside); //unmount to prevent 
     };
   }, []);
 
