@@ -5,7 +5,7 @@ import { User } from "@/database";
 import handleError from "@/lib/handler/error";
 import { NotFoundError, ValidationError } from "@/lib/http-errors";
 import { UserSchema } from "@/lib/validations";
-import { APIErrorReponse } from "@/types/global";
+
 
 export async function POST(request: Request) {
   const { email } = await request.json();

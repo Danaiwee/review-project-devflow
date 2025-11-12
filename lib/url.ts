@@ -17,9 +17,11 @@ export const formUrlQuery = ({ params, key, value }: formUrlQueryParams) => {
   queryString[key] = value;
 
   return qs.stringifyUrl({
-    url: window.location.pathname,
+    url: window.location.pathname, //eg. /questions
     query: queryString,
   });
+
+  //exmaple return /questions/?page=2&pageSize=10
 };
 
 export const removeKeyFromUrlQuery = ({

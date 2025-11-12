@@ -8,7 +8,11 @@ import { auth } from "@/auth";
 import { UnauthorizedError, ValidationError } from "../http-errors";
 import dbConnect from "../mongoose";
 
- 
+interface ActionOptions<T> {
+  params: T;
+  schema: ZodSchema<T>;
+  authorize?: boolean;
+}
 
 async function action<T>({
   params,
@@ -43,3 +47,45 @@ async function action<T>({
 }
 
 export default action;
+
+
+//Zod error example
+/* 
+  1. Before flatten
+  ZodError {
+  issues: [
+    {
+      code: "too_small",
+      minimum: 3,
+      type: "string",
+      inclusive: true,
+      message: "String must contain at least 3 character(s)",
+      path: ["username"]
+    },
+    {
+      code: "invalid_string",
+      validation: "email",
+      message: "Invalid email",
+      path: ["email"]
+    },
+    {
+      code: "too_small",
+      minimum: 6,
+      type: "string",
+      inclusive: true,
+      message: "String must contain at least 6 character(s)",
+      path: ["password"]
+    }
+  ]
+}
+
+  2.After flatten
+  {
+  formErrors: [],
+  fieldErrors: {
+    username: ["String must contain at least 3 character(s)"],
+    email: ["Invalid email"],
+    password: ["String must contain at least 6 character(s)"]
+  }
+}
+*/
