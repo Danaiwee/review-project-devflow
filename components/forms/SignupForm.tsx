@@ -47,7 +47,7 @@ const SignUpForm = ({ defaultValues }: SignUpFormProps) => {
         return;
       }
 
-      toast("Invalid credentials", { description: result.error?.message });
+      toast("Error", { description: result.error?.message });
     } catch (error) {
       console.log(error);
       toast("Error", {
