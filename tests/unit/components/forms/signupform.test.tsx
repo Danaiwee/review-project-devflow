@@ -9,6 +9,10 @@ import { mockRouter, mockToast, resetAllMocks } from "@/tests/mocks";
 
 const user = userEvent.setup();
 
+jest.mock("@/lib/actions/auth.action.ts", () => ({
+  signUpWithCredentials: jest.fn().mockResolvedValue({ success: true })
+}));
+
 describe("SignUp Form Component", () => {
   beforeEach(() => {
     resetAllMocks();
