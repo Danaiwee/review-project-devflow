@@ -11,7 +11,7 @@ const config: Config = {
     {
       displayName: "client",
       testEnvironment: "jsdom",
-      clearMocks: [
+      testMatch: [
         "**/tests/unit/**/*.+(test|spec).[jt]s?(x)",
         "**/tests/integration/**/*.client.+(test|spec).[jt]s?(x)",
         "**/*.client.+(test|spec).[jt]s?(x)"
@@ -21,7 +21,8 @@ const config: Config = {
         "^@/(.*)$": "<rootDir>/$1"
       },
       setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
-      testPathIgnorePatterns: [".*\\.server\\.(test|spec)\\.[jt]s?(x)$"]
+      testPathIgnorePatterns: [".*\\.server\\.(test|spec)\\.[jt]s?(x)$"],
+      clearMocks: true
     },
     {
       displayName: "server",
