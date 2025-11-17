@@ -5,14 +5,7 @@ import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 
 import { ROUTES } from "@/constants/routes";
-import {
-  Answer,
-  Question,
-  Tag,
-  TagQuestion,
-  Collection,
-  Vote,
-} from "@/database";
+import { Answer, Question, Tag, TagQuestion, Collection, Vote } from "@/database";
 import { ITagDoc } from "@/database/tag.model";
 
 import action from "../handler/action";
@@ -25,7 +18,7 @@ import {
   EditQuestionParamsSchema,
   GetQuestionParamsSchema,
   IncrementViewsSchema,
-  PaginatedSearchParamsSchema,
+  PaginatedSearchParamsSchema
 } from "../validations";
 import { createInteraction } from "./interaction.action";
 
@@ -33,7 +26,7 @@ export async function createQuestion(params: CreateQuestionParams) {
   const validationResult = await action({
     params,
     schema: AskQuestionSchema,
-    authorize: true,
+    authorize: true
   });
 
   if (validationResult instanceof Error) {
@@ -52,8 +45,8 @@ export async function createQuestion(params: CreateQuestionParams) {
         {
           title,
           content,
-          author: userId,
-        },
+          author: userId
+        }
       ],
       { session }
     );
@@ -69,20 +62,20 @@ export async function createQuestion(params: CreateQuestionParams) {
         //Second parameter (update)
         {
           $setOnInsert: { name: tag }, //Only set this field if we’re inserting a new document
-          $inc: { questions: 1 }, //always increment
+          $inc: { questions: 1 } //always increment
         },
         //Third parameter (options)
         {
           upsert: true, //insert a new document if none matches the filter
           new: true, //return the updated document
-          session, //mongoose transaction
+          session //mongoose transaction
         }
       );
 
       tagIds.push(existingTag._id);
       tagQuestionDocuments.push({
         tag: existingTag._id,
-        question: newQuestion._id,
+        question: newQuestion._id
       });
     }
 
@@ -91,7 +84,7 @@ export async function createQuestion(params: CreateQuestionParams) {
     await Question.findByIdAndUpdate(
       newQuestion._id,
       {
-        $push: { tags: { $each: tagIds } }, //push each value to tags array
+        $push: { tags: { $each: tagIds } } //push each value to tags array
       },
       { session }
     );
@@ -101,7 +94,7 @@ export async function createQuestion(params: CreateQuestionParams) {
         authorId: userId as string,
         targetId: newQuestion._id.toString(),
         targetType: "question",
-        action: "post",
+        action: "post"
       });
     });
 
@@ -121,7 +114,7 @@ export async function getQuestions(
 ): Promise<ActionResponse<{ questions: Question[]; isNext: boolean }>> {
   const validationResult = await action({
     params,
-    schema: PaginatedSearchParamsSchema,
+    schema: PaginatedSearchParamsSchema
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -137,10 +130,7 @@ export async function getQuestions(
 
   try {
     if (query) {
-      filterQuery.$or = [
-        { title: { $regex: query, $options: "i" } },
-        { content: { $regex: query, $options: "i" } },
-      ];
+      filterQuery.$or = [{ title: { $regex: query, $options: "i" } }, { content: { $regex: query, $options: "i" } }];
     }
 
     switch (filter) {
@@ -178,20 +168,18 @@ export async function getQuestions(
       success: true,
       data: {
         questions: JSON.parse(JSON.stringify(questions)),
-        isNext,
-      },
+        isNext
+      }
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 }
 
-export async function getQuestion(
-  params: GetQuestionParams
-): Promise<ActionResponse<{ question: Question }>> {
+export async function getQuestion(params: GetQuestionParams): Promise<ActionResponse<{ question: Question }>> {
   const validationResult = await action({
     params,
-    schema: GetQuestionParamsSchema,
+    schema: GetQuestionParamsSchema
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -200,39 +188,33 @@ export async function getQuestion(
   const { questionId } = validationResult.params!;
 
   try {
-    const question = await Question.findById(questionId)
-      .populate("tags", "name")
-      .populate("author", "_id name image");
+    const question = await Question.findById(questionId).populate("tags", "name").populate("author", "_id name image");
     if (!question) throw new NotFoundError("Question");
 
     return {
       success: true,
       data: {
-        question: JSON.parse(JSON.stringify(question)),
-      },
+        question: JSON.parse(JSON.stringify(question))
+      }
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 }
 
-export async function getTopQuestions(): Promise<
-  ActionResponse<{ questions: Question[] }>
-> {
+export async function getTopQuestions(): Promise<ActionResponse<{ questions: Question[] }>> {
   try {
     await dbConnect();
 
-    const questions = await Question.find()
-      .sort({ views: -1, upvotes: -1 })
-      .limit(5);
+    const questions = await Question.find().sort({ views: -1, upvotes: -1 }).limit(5);
 
     if (!questions) throw new NotFoundError("Questions");
 
     return {
       success: true,
       data: {
-        questions: JSON.parse(JSON.stringify(questions)),
-      },
+        questions: JSON.parse(JSON.stringify(questions))
+      }
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
@@ -240,13 +222,11 @@ export async function getTopQuestions(): Promise<
 }
 
 //TODO: Review
-export async function editQuestion(
-  params: EditQuestionParams
-): Promise<ActionResponse<{ question: Question }>> {
+export async function editQuestion(params: EditQuestionParams): Promise<ActionResponse<{ question: Question }>> {
   const validationResult = await action({
     params,
     schema: EditQuestionParamsSchema,
-    authorize: true,
+    authorize: true
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -259,13 +239,10 @@ export async function editQuestion(
   session.startTransaction();
 
   try {
-    const question = await Question.findById(questionId)
-      .populate("tags")
-      .session(session);
+    const question = await Question.findById(questionId).populate("tags").session(session);
     if (!question) throw new NotFoundError("Question");
 
-    if (question.author.toString() !== userId)
-      throw new Error("You cannot edit this question");
+    if (question.author.toString() !== userId) throw new Error("You cannot edit this question");
 
     if (question.title !== title || question.content !== content) {
       question.title = title;
@@ -275,16 +252,10 @@ export async function editQuestion(
     }
 
     const lowerTagNames = tags.map((tag: string) => tag.toLowerCase());
-    const existingTagNames = question.tags.map((tag: ITagDoc) =>
-      tag.name.toLowerCase()
-    );
+    const existingTagNames = question.tags.map((tag: ITagDoc) => tag.name.toLowerCase());
 
-    const tagsToAdd = tags.filter(
-      (tag: string) => !existingTagNames.includes(tag.toLowerCase())
-    );
-    const tagsToRemove = question.tags.filter(
-      (tag: ITagDoc) => !lowerTagNames.includes(tag.name.toLowerCase())
-    );
+    const tagsToAdd = tags.filter((tag: string) => !existingTagNames.includes(tag.toLowerCase()));
+    const tagsToRemove = question.tags.filter((tag: ITagDoc) => !lowerTagNames.includes(tag.name.toLowerCase()));
 
     const newTagDocuments = [];
     if (tagsToAdd.length > 0) {
@@ -305,27 +276,19 @@ export async function editQuestion(
     if (tagsToRemove.length > 0) {
       const tagIdsToRemove = tagsToRemove.map((tag: ITagDoc) => tag._id);
 
-      await Tag.updateMany(
-        { _id: { $in: tagIdsToRemove } },
-        { $inc: { questions: -1 } },
-        { session }
-      );
+      await Tag.updateMany({ _id: { $in: tagIdsToRemove } }, { $inc: { questions: -1 } }, { session });
 
       await TagQuestion.deleteMany(
         {
           tag: { $in: tagIdsToRemove },
-          question: questionId,
+          question: questionId
         },
         { session }
       );
 
-      const tagIdsToRemoveSet = new Set(
-        tagIdsToRemove.map((id: mongoose.Types.ObjectId) => id.toString())
-      );// remove the duplicate and turn array to be object
+      const tagIdsToRemoveSet = new Set(tagIdsToRemove.map((id: mongoose.Types.ObjectId) => id.toString())); // remove the duplicate and turn array to be object
 
-      question.tags = question.tags.filter(
-        (tag: mongoose.Types.ObjectId) => !tagIdsToRemoveSet.has(tag.toString())
-      );
+      question.tags = question.tags.filter((tag: mongoose.Types.ObjectId) => !tagIdsToRemoveSet.has(tag.toString()));
     }
 
     if (newTagDocuments.length > 0) {
@@ -338,8 +301,8 @@ export async function editQuestion(
     return {
       success: true,
       data: {
-        question: JSON.parse(JSON.stringify(question)),
-      },
+        question: JSON.parse(JSON.stringify(question))
+      }
     };
   } catch (error) {
     await session.abortTransaction();
@@ -349,12 +312,10 @@ export async function editQuestion(
   }
 }
 
-export async function incrementViews(
-  params: IncrementViewsParams
-): Promise<ActionResponse<{ views: number }>> {
+export async function incrementViews(params: IncrementViewsParams): Promise<ActionResponse<{ views: number }>> {
   const validationResult = await action({
     params,
-    schema: IncrementViewsSchema,
+    schema: IncrementViewsSchema
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -373,21 +334,19 @@ export async function incrementViews(
     return {
       success: true,
       data: {
-        views: question.views,
-      },
+        views: question.views
+      }
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }
 }
 
-export async function deleteQuestion(
-  params: DeleteQuestionParams
-): Promise<ActionResponse> {
+export async function deleteQuestion(params: DeleteQuestionParams): Promise<ActionResponse> {
   const validationResult = await action({
     params,
     schema: DeleteQuestionSchema,
-    authorize: true,
+    authorize: true
   });
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
@@ -403,33 +362,26 @@ export async function deleteQuestion(
     const question = await Question.findById(questionId).session(session);
     if (!question) throw new NotFoundError("Question");
 
-    if (question.author.toString() !== userId)
-      throw new Error("You cannot delete question");
+    if (question.author.toString() !== userId) throw new Error("You cannot delete question");
 
     await Collection.deleteMany({ question: questionId }).session(session);
     await TagQuestion.deleteMany({ question: questionId }).session(session);
     await Vote.deleteMany({
       targetId: questionId,
-      targetType: "question",
+      targetType: "question"
     }).session(session);
 
     if (question.tags.length > 0) {
-      await Tag.updateMany(
-        { _id: { $in: question.tags } },
-        { $inc: { questions: -1 } },
-        { session }
-      );
+      await Tag.updateMany({ _id: { $in: question.tags } }, { $inc: { questions: -1 } }, { session });
     }
 
-    const answers = await Answer.find({ question: questionId }).session(
-      session
-    );
+    const answers = await Answer.find({ question: questionId }).session(session);
     if (answers.length > 0) {
       await Answer.deleteMany({ question: questionId }).session(session);
 
       await Vote.deleteMany({
         targetId: { $in: answers.map((answer) => answer.id) },
-        actionType: "answer",
+        actionType: "answer"
       }).session(session);
     }
 
@@ -438,7 +390,7 @@ export async function deleteQuestion(
         authorId: userId as string,
         targetId: question._id.toString(),
         targetType: "question",
-        action: "delete",
+        action: "delete"
       });
     });
 
