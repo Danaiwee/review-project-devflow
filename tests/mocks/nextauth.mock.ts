@@ -14,7 +14,6 @@ const mockSession = {
   expires: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
 };
 
-const mockAuth = jest.fn();
 const mockSignIn = jest.fn();
 const mockSignOut = jest.fn();
 
@@ -37,6 +36,12 @@ const mockSignOutReact = jest.fn();
 const mockGitHub = jest.fn();
 const mockGoogle = jest.fn();
 const mockCredentials = jest.fn();
+
+const mockAuth: jest.Mock<mockUseSessionReturn, []> = jest.fn(() => ({
+  data: mockSession,
+  status: "authenticated",
+  update: jest.fn()
+}));
 
 export {
   mockSession,
