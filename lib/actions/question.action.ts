@@ -17,6 +17,7 @@ import {
   DeleteQuestionSchema,
   EditQuestionParamsSchema,
   GetQuestionParamsSchema,
+  GetRelatedQuestionsSchema,
   IncrementViewsSchema,
   PaginatedSearchParamsSchema
 } from "../validations";
@@ -215,6 +216,47 @@ export async function getTopQuestions(): Promise<ActionResponse<{ questions: Que
       data: {
         questions: JSON.parse(JSON.stringify(questions))
       }
+    };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getRelatedQuestions(
+  params: GetRelatedQuestionParams
+): Promise<ActionResponse<{ questions: Question[] }>> {
+  const validationResult = await action({
+    params,
+    schema: GetRelatedQuestionsSchema
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question = await Question.findById(questionId).select("tags");
+    if (!question) throw new NotFoundError("Question");
+
+    const relatedTagIds = question.tags;
+
+    const queryfilter = {
+      tags: { $in: relatedTagIds },
+      _id: { $ne: questionId }
+    };
+
+    const relatedQuestions = await Question.find(queryfilter)
+      .sort({ view: -1, upvotes: -1, createdAt: -1 })
+      .limit(5)
+      .populate("tags", "name")
+      .populate("author", "_id name image")
+      .exec();
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(relatedQuestions))
     };
   } catch (error) {
     return handleError(error) as ErrorResponse;

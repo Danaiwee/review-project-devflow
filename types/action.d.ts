@@ -164,4 +164,8 @@ declare global {
     query: string;
     type?: string;
   }
+
+  interface GetRelatedQuestionParams {
+    questionId: string;
+  }
 }
