@@ -194,7 +194,6 @@ export async function getUserAnswers(
   }
 }
 
-//TODO: Review
 export async function getUserTopTags(
   params: GetUserTopTagsParams
 ): Promise<ActionResponse<{ tags: Tag[] }>> {
@@ -323,10 +322,12 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
     badges: Badges;
   }>
 > {
+  // 1. Validate Input
   const validationResult = await action({
     params,
     schema: GetUserStatsSchema,
   });
+
   if (validationResult instanceof Error) {
     return handleError(validationResult) as ErrorResponse;
   }
@@ -334,41 +335,53 @@ export async function getUserStats(params: GetUserStatsParams): Promise<
   const { userId } = validationResult.params!;
 
   try {
-    const [questionStats] = await Question.aggregate([
-      { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
-      {
-        $group: {
-          _id: null, //don’t group by any field
-          count: { $sum: 1 },
-          upvotes: { $sum: "$upvotes" },
-          views: { $sum: "$views" },
+    // 2. Run Aggregations in Parallel for speed
+    const [questionRes, answerRes] = await Promise.all([
+      Question.aggregate([
+        { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 },
+            upvotes: { $sum: "$upvotes" },
+            views: { $sum: "$views" },
+          },
         },
-      },
+      ]),
+      Answer.aggregate([
+        { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
+        {
+          $group: {
+            _id: null,
+            count: { $sum: 1 },
+            upvotes: { $sum: "$upvotes" },
+          },
+        },
+      ]),
     ]);
 
-    const [answerStats] = await Answer.aggregate([
-      { $match: { author: new mongoose.Types.ObjectId(userId as string) } },
-      {
-        $group: {
-          _id: null,
-          count: { $sum: 1 },
-          upvotes: { $sum: "$upvotes" },
-        },
-      },
-    ]);
+    // 3. Handle the "Empty Array" case with default values
+    const questionStats = questionRes[0] || { count: 0, upvotes: 0, views: 0 };
+    const answerStats = answerRes[0] || { count: 0, upvotes: 0 };
 
+    // 4. Assign Badges based on retrieved stats
     const badges = assignBadges({
       criteria: [
-        { type: "ANSWER_COUNT", count: answerStats.count }, //eg. 100
+        { type: "ANSWER_COUNT", count: answerStats.count },
         { type: "QUESTION_COUNT", count: questionStats.count },
         {
           type: "QUESTION_UPVOTES",
-          count: questionStats.upvotes + answerStats.upvotes,
+          count: questionStats.upvotes,
+        },
+        {
+          type: "ANSWER_UPVOTES",
+          count: answerStats.upvotes,
         },
         { type: "TOTAL_VIEWS", count: questionStats.views },
       ],
     });
 
+    // 5. Return the formatted data
     return {
       success: true,
       data: {

@@ -83,3 +83,51 @@ export async function POST(request: Request) {
     await session.endSession();
   }
 }
+
+
+/*Example when validation success and failed
+  1.Success
+  {
+  "success": true,
+  "data": {
+    "email": "user@example.com",
+    "password": "password123",
+    "provider": "google"
+  }
+
+  2.Failed
+  {
+  "success": false,
+  "error": {
+    "issues": [
+      {
+        "code": "invalid_string",
+        "validation": "email",
+        "message": "Invalid email address",
+        "path": ["email"]
+      },
+      {
+        "code": "too_small",
+        "minimum": 8,
+        "type": "string",
+        "message": "Password must be at least 8 characters",
+        "path": ["password"]
+      }
+    ],
+    "name": "ZodError"
+  }
+
+  3.After Flattern error
+  {
+  "email": [
+    "Invalid email address",
+    "Email is required"
+  ],
+  "password": [
+    "Password must be at least 8 characters",
+    "Password must contain a number"
+  ]
+}
+}
+}
+*/

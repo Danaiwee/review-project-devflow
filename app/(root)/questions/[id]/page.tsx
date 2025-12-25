@@ -106,7 +106,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
             />
 
             <Suspense fallback={<Loader2 className="size-3 animate-spin" />}>
-              <SaveQuestion questionId={_id} hasSavedQuestionPromise={hasSavedQuestionPromise} />
+              <SaveQuestion questionId={_id} hasSavedQuestionPromise={hasSavedQuestionPromise} userId={userId} />
             </Suspense>
           </div>
         </div>

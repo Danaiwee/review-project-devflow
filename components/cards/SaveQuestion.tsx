@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { use, useState } from "react";
 import { toast } from "sonner";
 
@@ -10,15 +9,10 @@ import { toggleSaveQuestion } from "@/lib/actions/collection.action";
 interface SaveQuestionProps {
   questionId: string;
   hasSavedQuestionPromise: Promise<ActionResponse<{ hasSaved: boolean }>>;
+  userId: string | null | undefined;
 }
 
-const SaveQuestion = ({
-  questionId,
-  hasSavedQuestionPromise,
-}: SaveQuestionProps) => {
-  const session = useSession();
-  const userId = session.data?.user?.id;
-
+const SaveQuestion = ({ questionId, hasSavedQuestionPromise, userId }: SaveQuestionProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data } = use(hasSavedQuestionPromise);
@@ -39,12 +33,12 @@ const SaveQuestion = ({
       const message = data?.saved ? "saved" : "unsaved";
 
       toast(`Question ${message} successfully`, {
-        description: "You can see your save question in collection page",
+        description: "You can see your save question in collection page"
       });
     } catch (error) {
       console.log(error);
       toast("Error", {
-        description: "Cannot save the question",
+        description: "Cannot save the question"
       });
     } finally {
       setIsLoading(false);

@@ -120,6 +120,8 @@ const QuestionForm = ({ question, isEdit = false }: QuestionFormProps) => {
           });
 
           router.push(ROUTES.QUESTION(result.data._id));
+
+          return;
         }
         toast("Error", {description: "Failed to create question"})
       } catch (error) {

@@ -103,7 +103,6 @@ export async function hasSavedQuestion(
   }
 }
 
-//TODO: Review
 export async function getSavedQuestions(
   params: PaginatedSearchParams
 ): Promise<ActionResponse<{ questions: Collection[]; isNext: boolean }>> {

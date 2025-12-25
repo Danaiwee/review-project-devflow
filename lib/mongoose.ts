@@ -47,3 +47,27 @@ const dbConnect = async (): Promise<Mongoose> => {
 };
 
 export default dbConnect;
+
+/* Exmaple of cached.conn object 
+  {
+   -- The primary connection details --
+  connection: {
+    host: "your-cluster.mongodb.net",
+    port: 27017,
+    name: "devFlow",
+    readyState: 1, // 1 means 'connected'
+    models: { ... }, // All models registered in your app
+    db: Admin { ... }, // The raw MongoDB Driver instance
+  },
+  
+  -- Mongoose utilities (methods you usually import from 'mongoose') --
+  models: { ... },
+  Schema: [Function: Schema],
+  model: [Function: model],
+  Types: { ObjectId: [Function], ... },
+  
+  -- State management -- 
+  connections: [ [Connector] ], // Array of all open connections
+  plugins: []
+}
+*/
