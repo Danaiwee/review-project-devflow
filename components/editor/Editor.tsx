@@ -25,6 +25,7 @@ import {
   quotePlugin,
   Separator,
   tablePlugin,
+  thematicBreakPlugin,
   toolbarPlugin,
   UndoRedo,
 } from "@mdxeditor/editor";
@@ -52,6 +53,7 @@ const Editor = ({ value, editorRef, fieldChange }: EditorProps) => {
       onChange={fieldChange}
       className="background-light800_dark200 light-border-2 markdown-editor dark-editor grid w-full border rounded-md"
       plugins={[
+        thematicBreakPlugin(),
         headingsPlugin(), //supports # H1, ## H2, etc.
         listsPlugin(), //supports bulleted/numbered lists.
         linkPlugin(), //add links.
