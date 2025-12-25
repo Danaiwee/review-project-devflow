@@ -17,28 +17,23 @@ interface NavLinksProps {
 
 const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
   const pathname = usePathname();
-  
 
   return (
     <>
       {SIDEBAR_LINKS.map((item) => {
-        const isActive =
-          (pathname.includes(item.route) && item.route.length > 1) ||
-          pathname === item.route;
+        const isActive = (pathname.includes(item.route) && item.route.length > 1) || pathname === item.route;
+        const isProfilePage = item.route === "/profile";
 
-        if (item.route === "/profile") {
-          if (userId) item.route = `${item.route}/${userId}`;
-          else return null;
-        }
+        if (isProfilePage && !userId) return null;
+
+        const href = isProfilePage ? `${item.route}/${userId}` : item.route;
 
         const LinkComponent = (
           <Link
-            href={item.route}
+            href={href}
             key={item.label}
             className={cn(
-              isActive
-                ? "primary-gradient rounded-lg text-light-900"
-                : "text-dark300_light900",
+              isActive ? "primary-gradient rounded-lg text-light-900" : "text-dark300_light900",
               "flex items-center justify-start gap-4 bg-transparent p-4"
             )}
           >
@@ -49,14 +44,7 @@ const NavLinks = ({ isMobileNav = false, userId }: NavLinksProps) => {
               height={20}
               className={cn("w-5 h-5", { "invert-colors": !isActive })}
             />
-            <p
-              className={cn(
-                isActive ? "base-bold" : "base-medium",
-                !isMobileNav && "max-lg:hidden"
-              )}
-            >
-              {item.label}
-            </p>
+            <p className={cn(isActive ? "base-bold" : "base-medium", !isMobileNav && "max-lg:hidden")}>{item.label}</p>
           </Link>
         );
 
