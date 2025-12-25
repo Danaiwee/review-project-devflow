@@ -13,20 +13,18 @@ interface VotesProps {
   targetType: "question" | "answer";
   hasUpvoted?: boolean;
   hasDownvoted?: boolean;
+  userId: string | null;
 }
 
-const Votes = ({
-  upvotes,
-  downvotes,
-  hasUpvoted,
-  hasDownvoted,
-  targetId,
-  targetType,
-}: VotesProps) => {
+const Votes = ({ upvotes, downvotes, hasUpvoted, hasDownvoted, targetId, targetType, userId }: VotesProps) => {
   const [isDownvoting, setIsDownvoting] = useState(false);
   const [isUpvoting, setIsUpvoting] = useState(false);
 
   const handleVote = async (voteType: "upvote" | "downvote") => {
+    if (!userId) {
+      toast("You need to be logged in to vote a question");
+      return;
+    }
     if (voteType === "upvote") {
       setIsUpvoting(true);
     } else {
@@ -36,7 +34,7 @@ const Votes = ({
       const result = await createVote({
         targetId,
         targetType,
-        voteType,
+        voteType
       });
 
       if (result.success) {
@@ -46,7 +44,7 @@ const Votes = ({
             : `Downvote ${!hasDownvoted ? "added" : "removed"} successfully`;
 
         toast("Success", {
-          description: `${successMessage}`,
+          description: `${successMessage}`
         });
         return;
       }
@@ -74,9 +72,7 @@ const Votes = ({
         />
 
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1">
-          <p className="subtle-medium text-dark400_light900">
-            {formatNumber(upvotes)}
-          </p>
+          <p className="subtle-medium text-dark400_light900">{formatNumber(upvotes)}</p>
         </div>
       </div>
 
@@ -92,9 +88,7 @@ const Votes = ({
         />
 
         <div className="flex-center background-light700_dark400 min-w-5 rounded-sm p-1">
-          <p className="subtle-medium text-dark400_light900">
-            {formatNumber(downvotes)}
-          </p>
+          <p className="subtle-medium text-dark400_light900">{formatNumber(downvotes)}</p>
         </div>
       </div>
     </div>

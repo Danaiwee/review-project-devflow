@@ -4,6 +4,7 @@ import Link from "next/link";
 import { after } from "next/server";
 import React, { Suspense } from "react";
 
+import { auth } from "@/auth";
 import AllAnswers from "@/components/answers/AllAnswers";
 import Metric from "@/components/cards/Metric";
 import SaveQuestion from "@/components/cards/SaveQuestion";
@@ -42,6 +43,9 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
 const QuestionPage = async ({ params, searchParams }: RouteParams) => {
   const { id } = await params;
   const { page, pageSize, filter } = await searchParams;
+
+  const session = await auth();
+  const userId = session?.user?.id || null;
 
   const { data: questionData } = await getQuestion({ questionId: id });
   const { question } = questionData!;
@@ -92,6 +96,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
 
           <div className="flex items-center justify-end gap-4">
             <Votes
+              userId={userId}
               targetType="question"
               upvotes={question.upvotes}
               downvotes={question.downvotes}

@@ -95,7 +95,7 @@ const AnswerForm = ({
 
       if (!success) {
         return toast("Error", {
-          description: "Sorry, AI help only improve your answer.",
+          description: "Sorry, AI help only improve your answer. You need to provide at least 100 characters",
         });
       }
 
