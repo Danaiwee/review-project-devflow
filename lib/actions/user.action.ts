@@ -1,6 +1,6 @@
 "use server";
 
-import { FilterQuery, PipelineStage, Types } from "mongoose";
+import { FilterQuery, PipelineStage } from "mongoose";
 import mongoose from "mongoose";
 import { revalidatePath } from "next/cache";
 

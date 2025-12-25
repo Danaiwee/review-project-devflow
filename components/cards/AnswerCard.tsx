@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Suspense } from "react";
 
 import { auth } from "@/auth";
 import { ROUTES } from "@/constants/routes";

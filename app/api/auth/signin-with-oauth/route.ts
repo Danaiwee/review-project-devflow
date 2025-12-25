@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
     const slugifiedUsername = slugify(username, {
       lower: true,
-      strict: true,// remove all special character and replace spage with "-"
+      strict: true,// remove all special character and replace space with "-"
       trim: true,
     });// John Doe >> john-doe
 

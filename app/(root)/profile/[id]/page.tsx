@@ -116,7 +116,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
           />
 
           <div className="mt-3">
-            <h2 className="h2-bold text-dark-100_light900">{user.name}</h2>
+            <h2 className="h2-bold text-dark100_light900">{user.name}</h2>
             <p className="paragraph-regular text-dark500_light400">
               @{user.username}
             </p>

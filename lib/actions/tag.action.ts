@@ -102,25 +102,25 @@ export async function getTagQuestions(
     ];
   }
 
-  let sortCritetia = {};
+  let sortCriteria = {};
   switch (filter) {
     case "oldest":
-      sortCritetia = { creaatedAt: 1 };
+      sortCriteria = { createdAt: 1 };
       break;
     case "mostvoted":
-      sortCritetia = { upvotes: -1 };
+      sortCriteria = { upvotes: -1 };
       break;
     case "mostviewed":
-      sortCritetia = { views: -1 };
+      sortCriteria = { views: -1 };
       break;
     case "mostrecent":
-      sortCritetia = { createdAt: -1 };
+      sortCriteria = { createdAt: -1 };
       break;
     case "mostanswered":
-      sortCritetia = { answers: -1 };
+      sortCriteria = { answers: -1 };
       break;
     default:
-      sortCritetia = { createdAt: -1 };
+      sortCriteria = { createdAt: -1 };
       break;
   }
 
@@ -133,7 +133,7 @@ export async function getTagQuestions(
     const questions = await Question.find(filterQuery)
       .populate("author", "_id name image")
       .populate("tags", "name")
-      .sort(sortCritetia)
+      .sort(sortCriteria)
       .skip(skip)
       .limit(limit);
 

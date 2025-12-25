@@ -19,9 +19,7 @@ import { getQuestion, incrementViews } from "@/lib/actions/question.action";
 import { hasVoted } from "@/lib/actions/vote.action";
 import { formatNumber, getTimeStamp } from "@/lib/utils";
 
-export async function generateMetadata({
-  params,
-}: RouteParams): Promise<Metadata> {
+export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
   const { id } = await params;
   const { success, data } = await getQuestion({ questionId: id });
   const { question } = data || {};
@@ -31,13 +29,13 @@ export async function generateMetadata({
     return {
       title: "DevFlow | Question Details",
       description:
-        "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer.",
+        "View a detailed question along with all answers, comments, tags, and related discussions, and participate by voting or adding your own answer."
     };
   }
 
   return {
-    title: `DevFlow | ${question?.title}`,
-    description: `${question?.content.slice(0, 100)}`,
+    title: `DevFlow | ${title}`,
+    description: `${content?.slice(0, 100)}`
   };
 }
 
@@ -47,33 +45,28 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
 
   const { data: questionData } = await getQuestion({ questionId: id });
   const { question } = questionData!;
-  const { _id, author, createdAt, answers, views, tags, content, title } =
-    question;
+  const { _id, author, createdAt, answers, views, tags, content, title } = question;
 
   const {
     success: answersSuccess,
     data: answersData,
-    error: answersError,
+    error: answersError
   } = await getAnswers({
     questionId: id,
     page: Number(page) || 1,
     pageSize: Number(pageSize) || 10,
-    filter,
+    filter
   });
-  const {
-    totalAnswers,
-    answers: allAnswers,
-    isNext: answersIsNext,
-  } = answersData || {};
+  const { totalAnswers, answers: allAnswers, isNext: answersIsNext } = answersData || {};
 
   const { data } = await hasVoted({
     targetId: _id,
-    targetType: "question",
+    targetType: "question"
   });
   const { hasUpvoted, hasDownvoted } = data || {};
 
   const hasSavedQuestionPromise = hasSavedQuestion({
-    questionId: _id,
+    questionId: _id
   });
 
   after(async () => {
@@ -93,9 +86,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
               fallbackClassName="text-[10px]"
             />
             <Link href={ROUTES.PROFILE(author._id)}>
-              <p className="paragraph-semibold text-dark300_light700 ml-1">
-                {author.name}
-              </p>
+              <p className="paragraph-semibold text-dark300_light700 ml-1">{author.name}</p>
             </Link>
           </div>
 
@@ -110,17 +101,12 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
             />
 
             <Suspense fallback={<Loader2 className="size-3 animate-spin" />}>
-              <SaveQuestion
-                questionId={_id}
-                hasSavedQuestionPromise={hasSavedQuestionPromise}
-              />
+              <SaveQuestion questionId={_id} hasSavedQuestionPromise={hasSavedQuestionPromise} />
             </Suspense>
           </div>
         </div>
 
-        <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">
-          {title}
-        </h2>
+        <h2 className="h2-semibold text-dark200_light900 mt-3.5 w-full">{title}</h2>
       </section>
 
       <section className="mb-8 mt-5 flex flex-wrap gap-4">
@@ -167,11 +153,7 @@ const QuestionPage = async ({ params, searchParams }: RouteParams) => {
       </section>
 
       <section className="my-5">
-        <AnswerForm
-          questionId={_id}
-          questionTitle={title}
-          questionContent={content}
-        />
+        <AnswerForm questionId={_id} questionTitle={title} questionContent={content} />
       </section>
     </>
   );

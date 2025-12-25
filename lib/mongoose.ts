@@ -32,11 +32,11 @@ const dbConnect = async (): Promise<Mongoose> => {
     cached.promise = mongoose
       .connect(MONGODB_URI, { dbName: "devFlow" })
       .then((result) => {
-        console.info("Connected to MongoDB");
+        logger.info("Connected to MongoDB");
         return result;
       })
       .catch((error) => {
-        console.error("Error connecting to MongoDB", error);
+        logger.error("Error connecting to MongoDB", error);
         throw error;
       });
   }
@@ -47,8 +47,3 @@ const dbConnect = async (): Promise<Mongoose> => {
 };
 
 export default dbConnect;
-
-//After connecting, this is how cached.conn looklike
-/*
-  
-*/

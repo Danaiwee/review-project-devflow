@@ -200,7 +200,7 @@ describe("getQuestion action", () => {
       expect(result.data?.isNext).toBe(false);
     });
 
-    it("should search and filter togeher", async () => {
+    it("should search and filter together", async () => {
       const result = await getQuestions({ page: 1, pageSize: 10, query: "react", filter: "popular" });
 
       expect(result.success).toBe(true);
